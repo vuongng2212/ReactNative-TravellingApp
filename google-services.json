@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "131355940913",
+    "project_id": "travellingapp-ef3ae",
+    "storage_bucket": "travellingapp-ef3ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131355940913:android:ef6d805c5ed23b53fb5d10",
+        "android_client_info": {
+          "package_name": "com.IUH.TravellingApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsuoTDvYKie9vBlp1UP23DoKmbrBLo4So"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
