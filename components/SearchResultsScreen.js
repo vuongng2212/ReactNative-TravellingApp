@@ -8,14 +8,26 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  SafeAreaView,
+  Modal,
+  ScrollView,
 } from "react-native";
 import { db } from "../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import { Checkbox } from "react-native-paper";
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
 
 export default function SearchResultsScreen() {
   const [data, setData] = useState([]);
+  const [checkedAll, setChedkedAll] = useState(true);
+  const [checkedKitchen, setCheckedKitchen] = useState(false);
+  const [checkedPool, setCheckedPool] = useState(false);
+  const [checkedGym, setCheckedGym] = useState(false);
+  const [checkedOutdoor, setCheckedOutdoor] = useState(false);
+  const [checkedInternet, setCheckedInternet] = useState(false);
+
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,34 +59,256 @@ export default function SearchResultsScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <View style={styles.search}>
         <TouchableOpacity>
           <Image source={SearchIcon} style={styles.searchImg} />
         </TouchableOpacity>
         <TextInput placeholder="Anywhere" style={styles.txtInput} />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image source={AdjustIcon} style={styles.adjust} />
         </TouchableOpacity>
       </View>
+      <View style={styles.horizontalLine}></View>
       <View style={styles.presentTotalPrice}>
         <Text style={styles.txtPresent}>Present total price</Text>
-        <Text style={styles.txtAllInclusive}>All-includesive, pre-tax</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.txtAllInclusive}>All-inclusive, pre-tax</Text>
+          <Checkbox
+            status={checkedAll ? "checked" : "unchecked"}
+            onPress={() => {
+              setChedkedAll(!checkedAll);
+            }}
+          />
+        </View>
       </View>
-
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
-    </View>
+
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modelTitle}>
+              <Text></Text>
+              <Text style={styles.txtTitle}>Filters</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text>X</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.horizontaModellLine}></View>
+
+            <ScrollView style={{ maxHeight: "100%", margin: 15 }}>
+              {/* Price range */}
+              <View>
+                <Text style={styles.txtMainContent}>Price range</Text>
+                <View></View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={styles.borderRange}>
+                    <View
+                      style={{
+                        marginLeft: 25,
+                        marginRight: 25,
+                        marginTop: 5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <Text>Minimum</Text>
+                      <Text>US$10</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 30 }}>-</Text>
+                  </View>
+                  <View style={styles.borderRange}>
+                    <View
+                      style={{
+                        marginLeft: 25,
+                        marginRight: 25,
+                        marginTop: 5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <Text>Maximum</Text>
+                      <Text>US$250</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              {/* Type of place */}
+              <View style={{ marginTop: 25 }}>
+                <Text style={styles.txtMainContent}>Type of place</Text>
+                <View>
+                  <Text style={styles.txtMainTOP}>Entire place</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.txtDetailTOP}>
+                      Entire apartments, condos, house
+                    </Text>
+                    <Checkbox />
+                  </View>
+                </View>
+                <View>
+                  <Text style={styles.txtMainTOP}>Private room</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.txtDetailTOP}>
+                      Typically come with a private bathroom unless otherwise
+                      started
+                    </Text>
+                    <Checkbox />
+                  </View>
+                </View>
+                <View>
+                  <Text style={styles.txtMainTOP}>Domritories</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.txtDetailTOP}>
+                      Large rooms with multiple beds that are shared with others
+                    </Text>
+                    <Checkbox />
+                  </View>
+                </View>
+              </View>
+              {/* Room and bed */}
+              <View style={styles.modalText}>
+                <Text style={styles.txtMainContent}>Rooms and beds</Text>
+                <TextInput
+                  placeholder="Bedrooms"
+                  style={styles.txtRoomandBed}
+                />
+                <View style={styles.horizontaModellLine}></View>
+                <TextInput placeholder="Beds" style={styles.txtRoomandBed} />
+                <View style={styles.horizontaModellLine}></View>
+                <TextInput
+                  placeholder="Bathrooms"
+                  style={styles.txtRoomandBed}
+                />
+                <View style={styles.horizontaModellLine}></View>
+              </View>
+              {/* Facilities */}
+              <View>
+                <Text style={styles.txtMainContent}>Facilities</Text>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Kitchen</Text>
+                  <Checkbox
+                    status={checkedKitchen ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedKitchen(!checkedKitchen);
+                    }}
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Pool</Text>
+                  <Checkbox
+                    status={checkedPool ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedPool(!checkedPool);
+                    }}
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Gym</Text>
+                  <Checkbox
+                    status={checkedGym ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedGym(!checkedGym);
+                    }}
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Outdoor space</Text>
+                  <Checkbox
+                    status={checkedOutdoor ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedOutdoor(!checkedOutdoor);
+                    }}
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Internet access</Text>
+                  <Checkbox
+                    status={checkedInternet ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedInternet(!checkedInternet);
+                    }}
+                  />
+                </View>
+              </View>
+            </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginLeft: 15,
+                marginRight: 15,
+              }}
+            >
+              <TouchableOpacity>
+                <Text style={{ color: "#b1b2b6" }}>Clear all</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>View Results</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: "#ffffff",
+    flex: 1, // Đảm bảo modal sẽ hiển thị đúng
   },
   search: {
     flexDirection: "row",
@@ -96,12 +330,13 @@ const styles = StyleSheet.create({
   },
   txtInput: {
     fontSize: 20,
+    flex: 1,
   },
   presentTotalPrice: {
     borderWidth: 1,
     borderRadius: 5,
-    marginTop: 40,
-    borderColor: "gray",
+    marginTop: 20,
+    borderColor: "#f7f7f7",
   },
   txtPresent: {
     margin: 5,
@@ -124,5 +359,89 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginTop: 10,
+  },
+  horizontalLine: {
+    height: 1,
+    marginTop: 25,
+    backgroundColor: "#f6f6f6",
+    width: "100%",
+  },
+  horizontaModellLine: {
+    height: 1,
+    marginTop: 10,
+    backgroundColor: "#f6f6f6",
+    width: "100%",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "100%",
+    height: "70%",
+    padding: 20,
+    backgroundColor: "#ffffff",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  modelTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  txtTitle: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  modalText: {
+    fontSize: 16,
+    alignItems: "flex-start",
+    marginTop: 25,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: "#00bfd1",
+    borderRadius: 5,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  buttonText: {
+    color: "#fffff",
+    fontSize: 16,
+  },
+  txtRoomandBed: {
+    fontSize: 14,
+    marginTop: 10,
+  },
+  txtMainContent: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 25,
+  },
+  txtFacilites: {
+    fontSize: 16,
+  },
+  viewFacilities: {
+    flexDirection: "row",
+    marginBottom: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  borderRange: {
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: 10,
+  },
+  txtMainTOP: {
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  txtDetailTOP: {
+    marginTop: 5,
+    color: "#9fa0a5",
+    width: "89%",
   },
 });
