@@ -422,13 +422,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   horizontalLine: {
-    height: 1,
+    height: 3,
     marginTop: 25,
     backgroundColor: "#f6f6f6",
     width: "100%",
   },
   horizontaModellLine: {
-    height: 1,
+    height: 3,
     marginTop: 10,
     backgroundColor: "#f6f6f6",
     width: "100%",
