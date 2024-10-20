@@ -3,7 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SearchResultsScreen from "./components/SearchResultsScreen";
 import PropertyDetailScreen from "./components/PropertyDetailScreen";
-// import add from "./components/addDocument";
+import FacilitiesANDServiceScreen from "./components/FacilitiesANDServiceScreen";
+import ComfirmAndPay from "./components/ComfirmAndPay";
+import DescriptionScreen from "./components/DescriptionScreen";
+import ReviewScreen from "./components/ReviewScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +22,26 @@ export default function App() {
         <Stack.Screen
           name="PropertyDetailScreen"
           component={PropertyDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FacilitiesANDServiceScreen"
+          component={FacilitiesANDServiceScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ComfirmAndPay"
+          component={ComfirmAndPay}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DescriptionScreen"
+          component={DescriptionScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ReviewScreen"
+          component={ReviewScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}

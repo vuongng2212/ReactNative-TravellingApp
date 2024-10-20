@@ -61,6 +61,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
             </View>
             <TouchableOpacity
               style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
+              onPress={() => navigation.navigate("ReviewScreen")}
             >
               <Text style={{ color: "#5a5b5d" }}> reviews </Text>
               <Image source={next} style={{ width: 15, height: 15 }} />
@@ -116,7 +117,10 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 </View>
               </View>
             )}
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => navigation.navigate("FacilitiesANDServiceScreen")}
+            >
               <Text style={styles.txtBtn}>Show all</Text>
             </TouchableOpacity>
           </View>
@@ -139,6 +143,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
                   margin: 10,
                   alignItems: "center",
                 }}
+                onPress={() => navigation.navigate("ReviewScreen")}
               >
                 <Text style={{ color: "#5a5b5d" }}>See all </Text>
                 <Image source={next} style={{ width: 10, height: 10 }} />
@@ -212,7 +217,10 @@ export default function PropertyDetailScreen({ route, navigation }) {
               Description
             </Text>
           </View>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => navigation.navigate("DescriptionScreen")}
+          >
             <Text style={styles.txtBtn}>View more</Text>
           </TouchableOpacity>
           <View style={styles.honrizonLine}></View>
@@ -229,7 +237,12 @@ export default function PropertyDetailScreen({ route, navigation }) {
               <Text style={{ fontWeight: "bold" }}>${item.Price}</Text>
               <Text>/night</Text>
             </View>
-            <TouchableOpacity style={styles.bookBtn}>
+            <TouchableOpacity
+              style={styles.bookBtn}
+              onPress={() =>
+                navigation.navigate("ComfirmAndPay", { item: item })
+              }
+            >
               <Text style={styles.bookTxt}>Book now</Text>
             </TouchableOpacity>
           </View>
