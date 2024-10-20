@@ -7,90 +7,234 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
+  Button,
 } from "react-native";
 
 import backIcon from "../assets/backIcon.png";
 import locationIcon from "../assets/location.png";
 import star from "../assets/star.png";
 import next from "../assets/next.png";
+import Internet from "../assets/Internet.png";
+import Kitchen from "../assets/Kitchen.png";
+import Gym from "../assets/Gym.png";
+import Pool from "../assets/Pool.png";
+import Outdoor from "../assets/Outdoor.png";
+import Clock from "../assets/Clock.png";
+
 export default function PropertyDetailScreen({ route, navigation }) {
   const { item } = route.params;
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-      <View>
-        <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
-
-        <TouchableOpacity
-          style={styles.overlayIMG}
-          onPress={() => navigation.goBack()}
-        >
-          <Image source={backIcon} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
-        <Text style={styles.txtName}>{item.Name}</Text>
-        {/* Name and Address */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 7,
-          }}
-        >
-          <Image source={locationIcon} style={{ width: 25, height: 25 }} />
-          <Text>{item.Address}</Text>
-        </View>
-        {/* Rating */}
-        <View style={styles.rating}>
-          <View
-            style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
-          >
-            <Image source={star} style={{ width: 15, height: 15 }} />
-            <Text> {item.Rate}/5</Text>
-          </View>
-          <View
-            style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
-          >
-            <Text> reviews </Text>
-            <Image source={next} style={{ width: 15, height: 15 }} />
-          </View>
-        </View>
-      </View>
-      <View style={styles.honrizonLine}></View>
-      <View style={styles.container}>
-        {/* Facilities and services */}
+      <ScrollView>
         <View>
-          <Text>Facilities & services</Text>
+          <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
 
+          <TouchableOpacity
+            style={styles.overlayIMG}
+            onPress={() => navigation.goBack()}
+          >
+            <Image source={backIcon} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.txtName}>{item.Name}</Text>
+          {/* Name and Address */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 7,
+            }}
+          >
+            <Image source={locationIcon} style={{ width: 25, height: 25 }} />
+            <Text>{item.Address}</Text>
+          </View>
+          {/* Rating */}
+          <View style={styles.rating}>
+            <View
+              style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
+            >
+              <Image source={star} style={{ width: 15, height: 15 }} />
+              <Text> {item.Rate}/5</Text>
+            </View>
+            <TouchableOpacity
+              style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
+            >
+              <Text style={{ color: "#5a5b5d" }}> reviews </Text>
+              <Image source={next} style={{ width: 15, height: 15 }} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.honrizonLine}></View>
+        <View style={styles.container}>
+          {/* Facilities and services */}
           <View>
+            <Text
+              style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}
+            >
+              Facilities & services
+            </Text>
+
+            <View>
+              <Text style={styles.facilitiesTxt}>
+                {item.Guest} Guests {item.Bedrooms} Bedrooms {item.Beds} Beds
+                {item.Bathrooms} Bath
+              </Text>
+            </View>
+
+            {item.Internet && (
+              <View>
+                <View style={styles.facilitiesItem}>
+                  <Image source={Internet} style={styles.facilitiesImg} />
+                  <Text style={styles.facilitiesTxt}>Wifi</Text>
+                </View>
+              </View>
+            )}
+            {item.Kitchen && (
+              <View>
+                <View style={styles.facilitiesItem}>
+                  <Image source={Kitchen} style={styles.facilitiesImg} />
+                  <Text style={styles.facilitiesTxt}>Kitchen</Text>
+                </View>
+              </View>
+            )}
+            {item.Pool && (
+              <View>
+                <View style={styles.facilitiesItem}>
+                  <Image source={Pool} style={styles.facilitiesImg} />
+                  <Text style={styles.facilitiesTxt}>Pool</Text>
+                </View>
+              </View>
+            )}
+            {item.Outdoor && (
+              <View>
+                <View style={styles.facilitiesItem}>
+                  <Image source={Outdoor} style={styles.facilitiesImg} />
+                  <Text style={styles.facilitiesTxt}>Outdoor</Text>
+                </View>
+              </View>
+            )}
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.txtBtn}>Show all</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.honrizonLine}></View>
+
+          {/* Reviews */}
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>Reviews</Text>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  margin: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "#5a5b5d" }}>See all </Text>
+                <Image source={next} style={{ width: 10, height: 10 }} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+              <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                {item.Rate}
+              </Text>
+              <Text>/5</Text>
+            </View>
+            {/* Latest reviews */}
+            <View>{/* Flat list */}</View>
+            <View style={styles.honrizonLine}></View>
+
+            {/* Policies */}
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>Policies</Text>
+            </View>
+            <View style={styles.ruleView}>
+              <View style={{ margin: 10 }}>
+                <Text style={{ fontWeight: "bold" }}>House rules</Text>
+                <View style={styles.ruleInOut}>
+                  <Image source={Clock} style={{ width: 15, height: 15 }} />
+                  <Text> Earliest check in time:</Text>
+                </View>
+                <View style={styles.ruleInOut}>
+                  <Image source={Clock} style={{ width: 15, height: 15 }} />
+                  <Text> Earliest check out time:</Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 5,
+              }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                Checkin policies
+              </Text>
+            </View>
             <Text>
-              {item.Guest} Guests {item.Bedrooms} Bedrooms {item.Beds} Beds
-              {item.Bathrooms} Bath
+              It's
+              alwayaapfpfsajsappojffoppofapafjpofasjafpafspofapfaosjopfajpofapofjasfoasposp
+            </Text>
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.txtBtn}>View more</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.honrizonLine}></View>
+          {/* Description */}
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 10,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              Description
             </Text>
           </View>
-          {item.Internet && (
-            <View>
-              <Text>Wifi</Text>
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.txtBtn}>View more</Text>
+          </TouchableOpacity>
+          <View style={styles.honrizonLine}></View>
+          {/* Book */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Text>From: </Text>
+              <Text style={{ fontWeight: "bold" }}>${item.Price}</Text>
+              <Text>/night</Text>
             </View>
-          )}
-          {item.Kitchen && (
-            <View>
-              <Text>Kitchen</Text>
-            </View>
-          )}
-          {item.Pool && (
-            <View>
-              <Text>Pool</Text>
-            </View>
-          )}
-          {item.Outdoor && (
-            <View>
-              <Text>Outdoor</Text>
-            </View>
-          )}
+            <TouchableOpacity style={styles.bookBtn}>
+              <Text style={styles.bookTxt}>Book now</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -129,5 +273,55 @@ const styles = StyleSheet.create({
   honrizonLine: {
     backgroundColor: "#fafafa",
     height: 3,
+  },
+  facilitiesItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  facilitiesImg: {
+    width: 15,
+    height: 15,
+    marginRight: 10,
+  },
+  facilitiesTxt: {
+    color: "#656668",
+  },
+  btn: {
+    marginTop: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#96959a",
+  },
+  txtBtn: {
+    margin: 10,
+    color: "#999a9c",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  ruleView: {
+    backgroundColor: "#fafafa",
+    borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  ruleInOut: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  bookBtn: {
+    backgroundColor: "#00bcd5",
+    borderRadius: 5,
+    marginTop: 15,
+  },
+  bookTxt: {
+    color: "#fff",
+    marginTop: 15,
+    marginBottom: 15,
+    marginLeft: 25,
+    marginRight: 25,
   },
 });
