@@ -15,18 +15,27 @@ import {
 import { db } from "../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { Checkbox } from "react-native-paper";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
+// Image
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
 
-export default function SearchResultsScreen() {
+export default function SearchResultsScreen({ navigation }) {
+  // Fetch dât
   const [data, setData] = useState([]);
+  // Multi range
+  const [range, setRange] = useState([10, 250]);
+  // Checkbox
   const [checkedAll, setChedkedAll] = useState(true);
+  const [checkedEntire, setChedkedEntire] = useState(false);
+  const [checkedPrivate, setChedkedPrivate] = useState(false);
+  const [checkedDormitories, setChedkedDormitories] = useState(false);
   const [checkedKitchen, setCheckedKitchen] = useState(false);
   const [checkedPool, setCheckedPool] = useState(false);
   const [checkedGym, setCheckedGym] = useState(false);
   const [checkedOutdoor, setCheckedOutdoor] = useState(false);
   const [checkedInternet, setCheckedInternet] = useState(false);
-
+  // Model
   const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -44,7 +53,11 @@ export default function SearchResultsScreen() {
 
   const renderItem = ({ item }) => (
     <View>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("PropertyDetailScreen", { item: item });
+        }}
+      >
         <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={styles.txtRoom}>{item.Name}</Text>
@@ -86,6 +99,7 @@ export default function SearchResultsScreen() {
             onPress={() => {
               setChedkedAll(!checkedAll);
             }}
+            color="#0394ae"
           />
         </View>
       </View>
@@ -116,7 +130,29 @@ export default function SearchResultsScreen() {
               {/* Price range */}
               <View>
                 <Text style={styles.txtMainContent}>Price range</Text>
-                <View></View>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <MultiSlider
+                    values={range}
+                    sliderLength={320}
+                    onValuesChange={(values) => setRange(values)}
+                    min={10}
+                    max={250}
+                    step={1}
+                    selectedStyle={{
+                      backgroundColor: "#1EB1FC",
+                    }}
+                    unselectedStyle={{
+                      backgroundColor: "#D3D3D3",
+                    }}
+                    markerStyle={{
+                      backgroundColor: "#1EB1FC",
+                      height: 20,
+                      width: 20,
+                    }}
+                  />
+                </View>
                 <View
                   style={{
                     flexDirection: "row",
@@ -133,7 +169,7 @@ export default function SearchResultsScreen() {
                       }}
                     >
                       <Text>Minimum</Text>
-                      <Text>US$10</Text>
+                      <Text>US$ {range[0]}</Text>
                     </View>
                   </View>
                   <View
@@ -156,7 +192,7 @@ export default function SearchResultsScreen() {
                       }}
                     >
                       <Text>Maximum</Text>
-                      <Text>US$250</Text>
+                      <Text>US$ {range[1]}</Text>
                     </View>
                   </View>
                 </View>
@@ -176,7 +212,13 @@ export default function SearchResultsScreen() {
                     <Text style={styles.txtDetailTOP}>
                       Entire apartments, condos, house
                     </Text>
-                    <Checkbox />
+                    <Checkbox
+                      status={checkedEntire ? "checked" : "unchecked"}
+                      onPress={() => {
+                        setChedkedEntire(!checkedEntire);
+                      }}
+                      color="#0394ae"
+                    />
                   </View>
                 </View>
                 <View>
@@ -192,7 +234,13 @@ export default function SearchResultsScreen() {
                       Typically come with a private bathroom unless otherwise
                       started
                     </Text>
-                    <Checkbox />
+                    <Checkbox
+                      status={checkedPrivate ? "checked" : "unchecked"}
+                      onPress={() => {
+                        setChedkedPrivate(!checkedPrivate);
+                      }}
+                      color="#0394ae"
+                    />
                   </View>
                 </View>
                 <View>
@@ -207,7 +255,13 @@ export default function SearchResultsScreen() {
                     <Text style={styles.txtDetailTOP}>
                       Large rooms with multiple beds that are shared with others
                     </Text>
-                    <Checkbox />
+                    <Checkbox
+                      status={checkedDormitories ? "checked" : "unchecked"}
+                      onPress={() => {
+                        setChedkedDormitories(!checkedDormitories);
+                      }}
+                      color="#0394ae"
+                    />
                   </View>
                 </View>
               </View>
@@ -237,6 +291,7 @@ export default function SearchResultsScreen() {
                     onPress={() => {
                       setCheckedKitchen(!checkedKitchen);
                     }}
+                    color="#0394ae"
                   />
                 </View>
                 <View style={styles.viewFacilities}>
@@ -246,6 +301,7 @@ export default function SearchResultsScreen() {
                     onPress={() => {
                       setCheckedPool(!checkedPool);
                     }}
+                    color="#0394ae"
                   />
                 </View>
                 <View style={styles.viewFacilities}>
@@ -255,6 +311,7 @@ export default function SearchResultsScreen() {
                     onPress={() => {
                       setCheckedGym(!checkedGym);
                     }}
+                    color="#0394ae"
                   />
                 </View>
                 <View style={styles.viewFacilities}>
@@ -264,6 +321,7 @@ export default function SearchResultsScreen() {
                     onPress={() => {
                       setCheckedOutdoor(!checkedOutdoor);
                     }}
+                    color="#0394ae"
                   />
                 </View>
                 <View style={styles.viewFacilities}>
@@ -273,6 +331,7 @@ export default function SearchResultsScreen() {
                     onPress={() => {
                       setCheckedInternet(!checkedInternet);
                     }}
+                    color="#0394ae"
                   />
                 </View>
               </View>
@@ -290,7 +349,9 @@ export default function SearchResultsScreen() {
                 <Text style={{ color: "#b1b2b6" }}>Clear all</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>View Results</Text>
@@ -319,13 +380,13 @@ const styles = StyleSheet.create({
     borderColor: "gray",
   },
   searchImg: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     margin: 6,
   },
   adjust: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     margin: 6,
   },
   txtInput: {
@@ -408,7 +469,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   buttonText: {
-    color: "#fffff",
+    color: "#fff",
     fontSize: 16,
   },
   txtRoomandBed: {
@@ -434,6 +495,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     margin: 10,
+    borderColor: "#c6c8c7",
   },
   txtMainTOP: {
     fontWeight: "bold",
@@ -442,6 +504,6 @@ const styles = StyleSheet.create({
   txtDetailTOP: {
     marginTop: 5,
     color: "#9fa0a5",
-    width: "89%",
+    width: "85%",
   },
 });

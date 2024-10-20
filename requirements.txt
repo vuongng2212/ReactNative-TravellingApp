@@ -1,0 +1,3 @@
+npm install @ptomasroos/react-native-multi-slider
+npm install react-native-paper
+npm install react-native-vector-icons
