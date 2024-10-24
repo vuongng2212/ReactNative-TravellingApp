@@ -119,7 +119,11 @@ export default function PropertyDetailScreen({ route, navigation }) {
             )}
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => navigation.navigate("FacilitiesANDServiceScreen")}
+              onPress={() =>
+                navigation.navigate("FacilitiesANDServiceScreen", {
+                  item: item,
+                })
+              }
             >
               <Text style={styles.txtBtn}>Show all</Text>
             </TouchableOpacity>
