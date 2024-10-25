@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Button,
+  Linking,
 } from "react-native";
 
 import backIcon from "../assets/backIcon.png";
@@ -31,6 +31,15 @@ export default function PropertyDetailScreen({ route, navigation }) {
       return words.slice(0, limit).join(" ") + "...";
     }
     return text;
+  };
+
+  const latitude = 10.766454; // Tọa độ vĩ độ
+  const longitude = 106.692203; // Tọa độ kinh độ
+  const openMap = () => {
+    const url = `google.navigation:q=${latitude},${longitude}`;
+    Linking.openURL(url).catch((err) =>
+      console.error("An error occurred", err)
+    );
   };
 
   return (
@@ -58,7 +67,32 @@ export default function PropertyDetailScreen({ route, navigation }) {
             }}
           >
             <Image source={locationIcon} style={{ width: 25, height: 25 }} />
-            <Text>{item.Address}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Text style={{ width: "70%" }}>{item.Address}</Text>
+              <TouchableOpacity
+                style={{
+                  width: "30%",
+                }}
+                onPress={openMap}
+              >
+                <Text
+                  style={{
+                    width: "100%",
+                    color: "#58b5b9",
+                    textDecorationLine: "underline",
+                    textAlign: "center",
+                  }}
+                >
+                  View map
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {/* Rating */}
           <View style={styles.rating}>
