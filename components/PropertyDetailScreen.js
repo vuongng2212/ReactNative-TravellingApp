@@ -24,6 +24,15 @@ import Clock from "../assets/Clock.png";
 
 export default function PropertyDetailScreen({ route, navigation }) {
   const { item } = route.params;
+
+  const limitWords = (text, limit) => {
+    const words = text.split(" ");
+    if (words.length > limit) {
+      return words.slice(0, limit).join(" ") + "...";
+    }
+    return text;
+  };
+
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -208,6 +217,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.honrizonLine}></View>
+
           {/* Description */}
           <View
             style={{
@@ -221,13 +231,25 @@ export default function PropertyDetailScreen({ route, navigation }) {
               Description
             </Text>
           </View>
+          <View>
+            <Image
+              source={{ uri: `${item.Image}.jpg` }}
+              style={styles.DescriptionImg}
+            />
+            <Text style={styles.DescriptionTxt}>
+              {limitWords(item.Description, 25)}
+            </Text>
+          </View>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate("DescriptionScreen")}
+            onPress={() =>
+              navigation.navigate("DescriptionScreen", { item: item })
+            }
           >
             <Text style={styles.txtBtn}>View more</Text>
           </TouchableOpacity>
           <View style={styles.honrizonLine}></View>
+
           {/* Book */}
           <View
             style={{
@@ -340,5 +362,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginLeft: 25,
     marginRight: 25,
+  },
+  DescriptionImg: {
+    width: "100%",
+    height: 200,
+  },
+  DescriptionTxt: {
+    marginTop: 10,
+    color: "#6f7072",
   },
 });
