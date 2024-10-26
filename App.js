@@ -7,13 +7,18 @@ import FacilitiesANDServiceScreen from "./components/FacilitiesANDServiceScreen"
 import ComfirmAndPay from "./components/ComfirmAndPay";
 import DescriptionScreen from "./components/DescriptionScreen";
 import ReviewScreen from "./components/ReviewScreen";
-
+import LaunchScreen from "./components/LaunchScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SearchResultsScreen">
+      <Stack.Navigator initialRouteName="LaunchScreen">
+      <Stack.Screen
+          name="LaunchScreen"
+          component={LaunchScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="SearchResultsScreen"
           component={SearchResultsScreen}
