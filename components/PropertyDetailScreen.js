@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Button,
+  Linking,
 } from "react-native";
 
 import backIcon from "../assets/backIcon.png";
@@ -24,6 +24,24 @@ import Clock from "../assets/Clock.png";
 
 export default function PropertyDetailScreen({ route, navigation }) {
   const { item } = route.params;
+
+  const limitWords = (text, limit) => {
+    const words = text.split(" ");
+    if (words.length > limit) {
+      return words.slice(0, limit).join(" ") + "...";
+    }
+    return text;
+  };
+
+  const latitude = 10.766454; // Tọa độ vĩ độ
+  const longitude = 106.692203; // Tọa độ kinh độ
+  const openMap = () => {
+    const url = `google.navigation:q=${latitude},${longitude}`;
+    Linking.openURL(url).catch((err) =>
+      console.error("An error occurred", err)
+    );
+  };
+
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -49,7 +67,32 @@ export default function PropertyDetailScreen({ route, navigation }) {
             }}
           >
             <Image source={locationIcon} style={{ width: 25, height: 25 }} />
-            <Text>{item.Address}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Text style={{ width: "70%" }}>{item.Address}</Text>
+              <TouchableOpacity
+                style={{
+                  width: "30%",
+                }}
+                onPress={openMap}
+              >
+                <Text
+                  style={{
+                    width: "100%",
+                    color: "#58b5b9",
+                    textDecorationLine: "underline",
+                    textAlign: "center",
+                  }}
+                >
+                  View map
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {/* Rating */}
           <View style={styles.rating}>
@@ -208,6 +251,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.honrizonLine}></View>
+
           {/* Description */}
           <View
             style={{
@@ -221,13 +265,25 @@ export default function PropertyDetailScreen({ route, navigation }) {
               Description
             </Text>
           </View>
+          <View>
+            <Image
+              source={{ uri: `${item.Image}.jpg` }}
+              style={styles.DescriptionImg}
+            />
+            <Text style={styles.DescriptionTxt}>
+              {limitWords(item.Description, 25)}
+            </Text>
+          </View>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate("DescriptionScreen")}
+            onPress={() =>
+              navigation.navigate("DescriptionScreen", { item: item })
+            }
           >
             <Text style={styles.txtBtn}>View more</Text>
           </TouchableOpacity>
           <View style={styles.honrizonLine}></View>
+
           {/* Book */}
           <View
             style={{
@@ -340,5 +396,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginLeft: 25,
     marginRight: 25,
+  },
+  DescriptionImg: {
+    width: "100%",
+    height: 200,
+  },
+  DescriptionTxt: {
+    marginTop: 10,
+    color: "#6f7072",
   },
 });
