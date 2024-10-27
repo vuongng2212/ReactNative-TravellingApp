@@ -8,10 +8,21 @@ import {
   StatusBar,
   StyleSheet,
 } from "react-native";
+import Svg, { Rect } from "react-native-svg";
 import Back from "../assets/left-arrow.png";
 import StarIcon from "../assets/star.png";
 export default function ReviewScreen({ navigation }) {
+  const barWidth = 300; // Độ rộng của thanh
+  const barHeight = 10; // Chiều cao của thanh
+  const borderRadius = 10; // Độ cong của góc
+  const ratings = {
+    fiveStars: 80,
+    totalReviews: 100, // Tổng số lượt đánh giá
+  };
+
+  const fiveStarPercentage = (ratings.fiveStars / ratings.totalReviews) * 100;
   const totalView = 262;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -37,8 +48,9 @@ export default function ReviewScreen({ navigation }) {
         >
           {totalView} reviews
         </Text>
+        {/* Rating Reviews */}
         <View style={styles.starView}>
-          <View>
+          <View style={{ marginRight: 100 }}>
             <Text style={{ fontSize: 18 }}>4.5/5</Text>
             {/* Star */}
             <View style={{ flexDirection: "row" }}>
@@ -49,6 +61,145 @@ export default function ReviewScreen({ navigation }) {
               <Image source={StarIcon} style={styles.starIcon} />
             </View>
           </View>
+
+          {/* Rate Bar */}
+          {/* Thong ke luot reviews*/}
+          <View>
+            <View style={styles.rateBar}>
+              <View style={{ width: "60%" }}>
+                <Svg height={barHeight} width="100%">
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={barWidth}
+                    height={barHeight}
+                    fill="lightgray"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={`${fiveStarPercentage}%`}
+                    height={barHeight}
+                    fill="gold"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+                </Svg>
+              </View>
+              <Text style={styles.lblRate}>5</Text>
+            </View>
+            <View style={styles.rateBar}>
+              <View style={{ width: "60%" }}>
+                <Svg height={barHeight} width="100%">
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={barWidth}
+                    height={barHeight}
+                    fill="lightgray"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={`${fiveStarPercentage}%`}
+                    height={barHeight}
+                    fill="gold"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+                </Svg>
+              </View>
+              <Text style={styles.lblRate}>4</Text>
+            </View>
+            <View style={styles.rateBar}>
+              <View style={{ width: "60%" }}>
+                <Svg height={barHeight} width="100%">
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={barWidth}
+                    height={barHeight}
+                    fill="lightgray"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={`${fiveStarPercentage}%`}
+                    height={barHeight}
+                    fill="gold"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+                </Svg>
+              </View>
+              <Text style={styles.lblRate}>3</Text>
+            </View>
+            <View style={styles.rateBar}>
+              <View style={{ width: "60%" }}>
+                <Svg height={barHeight} width="100%">
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={barWidth}
+                    height={barHeight}
+                    fill="lightgray"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={`${fiveStarPercentage}%`}
+                    height={barHeight}
+                    fill="gold"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+                </Svg>
+              </View>
+              <Text style={styles.lblRate}>2</Text>
+            </View>
+            <View style={styles.rateBar}>
+              <View style={{ width: "60%" }}>
+                <Svg height={barHeight} width="100%">
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={barWidth}
+                    height={barHeight}
+                    fill="lightgray"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+
+                  <Rect
+                    x="0"
+                    y="0"
+                    width={`${fiveStarPercentage}%`}
+                    height={barHeight}
+                    fill="gold"
+                    rx={borderRadius}
+                    ry={borderRadius}
+                  />
+                </Svg>
+              </View>
+              <Text style={styles.lblRate}>1</Text>
+            </View>
+          </View>
+
+          {/* Detail reviews */}
+          {/* Show all comments */}
+          {/* Using Firebase to load data from array Reviews */}
         </View>
       </View>
     </SafeAreaView>
@@ -74,5 +225,13 @@ const styles = StyleSheet.create({
   starIcon: {
     width: 20,
     height: 20,
+  },
+  rateBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  lblRate: {
+    marginLeft: 10,
   },
 });

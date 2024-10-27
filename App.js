@@ -8,15 +8,15 @@ import ComfirmAndPay from "./components/ComfirmAndPay";
 import DescriptionScreen from "./components/DescriptionScreen";
 import ReviewScreen from "./components/ReviewScreen";
 import LaunchScreen from "./components/LaunchScreen";
-import SignupScreen from './components/SignupScreen';
+import SignupScreen from "./components/SignupScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LaunchScreen">
-      <Stack.Screen
+      <Stack.Navigator initialRouteName="SearchResultsScreen">
+        <Stack.Screen
           name="LaunchScreen"
           component={LaunchScreen}
           options={{ headerShown: false }}
