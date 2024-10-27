@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, Image,TouchableOpacity } from 'react-native';
-
+//import SignupScreen from "./components/SignupScreen";
 export default function AssetExample({navigation}) {
   return (
     <View style={styles.container}>
