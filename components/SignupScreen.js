@@ -10,18 +10,28 @@ export default function SignupScreen() {
         placeholder="Enter your mobile number"
         keyboardType="phone-pad"
       />
+      <View style={styles.buttonContainer}>
+        <Button title="Continue" onPress={() => {}} />
+      </View>
+      <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
         <View style={styles.buttonContainer}>
           <Image style={styles.logo} source={require("../assets/Facebook_Logo.png")} />
+          <a href="https://www.facebook.com/">
           <Button title="Continue with Facebook" onPress={() => {}} />
+          </a>
         </View>
         <View style={styles.buttonContainer}>
           <Image style={styles.logo} source={require("../assets/Apple_logo.png")} />
+          <a href="https://www.facebook.com/">
           <Button title="Continue with Apple" onPress={() => {}} />
+          </a>
         </View>
         <View style={styles.buttonContainer}>
           <Image style={styles.logo} source={require("../assets/Google__G__logo.png")} />
+          <a href="https://accounts.google.com/v3/signin/identifier?elo=1&ifkv=AcMMx-d6D6UWD3tkue8wihsHJEYKSORS793L2j0Sf11mSP8e6Rq0ZQu8UBGH43uAzfAnsC6Wf3Ngbg&ddm=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin&continue=https%3A%2F%2Faccounts.google.com%2FManageAccount%3Fnc%3D1">
           <Button title="Continue with Google" onPress={() => {}} />
+          </a>
         </View>
         {/* <Text>All ready have account</Text><Linking></Linking> */}
       </View>
