@@ -1,7 +1,7 @@
 import { Link } from '@react-navigation/native';
 import { Text, View, TextInput, Button, Image, StyleSheet,Linking } from 'react-native';
-
-export default function SignupScreen() {
+import SearchResultsScreen from "./SearchResultsScreen";
+export default function SignupScreen({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>Create an account</Text>
@@ -11,7 +11,7 @@ export default function SignupScreen() {
         keyboardType="phone-pad"
       />
       <View style={styles.buttonContainer}>
-        <Button title="Continue" onPress={() => {}} />
+        <Button title="Continue" onPress={() => navigation.navigate('HomeScreen')}/>
       </View>
       <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
@@ -33,8 +33,8 @@ export default function SignupScreen() {
           <Button title="Continue with Google" onPress={() => {}} />
           </a>
         </View>
-        {/* <Text>All ready have account</Text><Linking></Linking> */}
       </View>
+      <Text style={styles.paragraph}>Already have an account ? <a href=''>Login </a></Text>
     </View>
   );
 }
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ecf0f1',
     padding: 8,
+    backgroundColor:"white",
   },
   paragraph: {
     margin: 24,
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
     width: '80%',
+    fontWeight:'light',
   },
   authOptions: {
     width: '100%',
