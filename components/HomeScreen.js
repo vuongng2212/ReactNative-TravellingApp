@@ -43,7 +43,7 @@ export default function HomeScreen({ navigation }) {
   const [checkedInternet, setCheckedInternet] = useState(false);
   // Model
   const [isModalVisible, setModalVisible] = useState(false);
-  const TabNav=createB
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +90,7 @@ export default function HomeScreen({ navigation }) {
           <Image source={AdjustIcon} style={styles.adjust} />
         </TouchableOpacity>
       </View>
-      <View style={styles.horizontalLine}></View>
+      {/* <View style={styles.horizontalLine}></View> */}
       {/* <View style={styles.presentTotalPrice}>
         <Text style={styles.txtPresent}>Present total price 123</Text>
         <View
@@ -120,13 +120,13 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity >
           <View style={{paddingHorizontal:26, borderRadius:8,paddingVertical:26,alignItems:"center"}}>
             <Image style={styles.menuImg} source={require('../assets/mountain.png')}/>
-            <Text style={{fontSize:20, fontWeight:400,}}>Beach</Text>
+            <Text style={{fontSize:20, fontWeight:400,}}>Mountain</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
           <View style={{paddingHorizontal:26, borderRadius:8,paddingVertical:26,alignItems:"center"}}>
             <Image style={styles.menuImg} source={require('../assets/camping.png')}/>
-            <Text style={{fontSize:20, fontWeight:400,}}>Beach</Text>
+            <Text style={{fontSize:20, fontWeight:400,}}>Camping</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -417,8 +417,8 @@ const styles = StyleSheet.create({
     margin: 6,
   },
   menuImg: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     margin: 3,
     borderRadius:10,
   },
