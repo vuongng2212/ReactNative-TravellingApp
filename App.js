@@ -10,7 +10,7 @@ import ReviewScreen from "./components/ReviewScreen";
 import LaunchScreen from "./components/LaunchScreen";
 import SignupScreen from "./components/SignupScreen";
 import HomeScreen from "./components/HomeScreen";
-
+import PaymentSuccess from "./components/PaymentSuccess";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -50,6 +50,11 @@ export default function App() {
         <Stack.Screen
           name="ComfirmAndPay"
           component={ComfirmAndPay}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PaymentSuccess"
+          component={PaymentSuccess}
           options={{ headerShown: false }}
         />
         <Stack.Screen

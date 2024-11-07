@@ -47,7 +47,9 @@ export default function ComfirmAndPay({ route, navigation }) {
       <View style={styles.honrizonLine}></View>
       {/* Your trip */}
       <View style={{ marginBottom: 20 }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}>Your trip</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}>
+          Your trip
+        </Text>
         <View
           style={{
             flexDirection: "row",
@@ -76,7 +78,9 @@ export default function ComfirmAndPay({ route, navigation }) {
       <View style={styles.honrizonLine}></View>
       {/* Payment options */}
       <View style={{ marginBottom: 20 }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}>Payment options</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}>
+          Payment options
+        </Text>
         {/* Pay in full */}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
@@ -121,7 +125,7 @@ export default function ComfirmAndPay({ route, navigation }) {
       <View style={{ justifyContent: "flex-end" }}>
         <TouchableOpacity
           style={styles.bookBtn}
-          onPress={() => navigation.navigate("ComfirmAndPay", { item: item })}
+          onPress={() => navigation.navigate("PaymentSuccess", { item: item })}
         >
           <Text style={styles.bookTxt}>Book now</Text>
         </TouchableOpacity>
@@ -135,7 +139,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingLeft: 20,
     paddingRight: 20,
-    
   },
   title: {
     marginTop: 10,
