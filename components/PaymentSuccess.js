@@ -41,9 +41,10 @@ export default function PaymentSuccess({ route, navigation }) {
           flex: 1,
           justifyContent: "center",
           borderWidth: 1,
-          borderColor: "red",
+          borderColor: "#EDEEF0",
           borderRadius: 15,
           backgroundColor: "#fff",
+          marginBottom: 20,
         }}
       >
         <View
@@ -54,7 +55,7 @@ export default function PaymentSuccess({ route, navigation }) {
         >
           <Image
             source={SuccessIcon}
-            style={{ width: 150, height: 150, marginBottom: 20 }}
+            style={{ width: 200, height: 200, marginBottom: 20 }}
           />
           <Text style={styles.title}>Payment success!</Text>
         </View>
@@ -114,10 +115,25 @@ export default function PaymentSuccess({ route, navigation }) {
           </View>
           <TouchableOpacity style={styles.btn}>
             <Image source={DownloadPDF} style={{ width: 20, height: 20 }} />
-            <Text style={{ fontSize: 16, margin: 10 }}>Get PDF receipt</Text>
+            <Text
+              style={{
+                fontSize: 16,
+                margin: 10,
+                color: "#909694",
+                fontWeight: "400",
+              }}
+            >
+              Get PDF receipt
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
+      <TouchableOpacity
+        style={styles.bookBtn}
+        onPress={() => navigation.navigate("SearchResultsScreen")}
+      >
+        <Text style={styles.bookTxt}>View booking</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -128,7 +144,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     backgroundColor: "#F8F9FB",
     paddingTop: 100,
-    paddingBottom: 100,
+    paddingBottom: 15,
   },
   title: {
     fontSize: 30,
@@ -138,6 +154,8 @@ const styles = StyleSheet.create({
   txtLeft: {
     fontSize: 16,
     fontWeight: "400",
+    color: "#757678",
+    marginBottom: 10,
   },
   txtRight: {
     fontSize: 16,
@@ -151,9 +169,20 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "#909694",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  bookBtn: {
+    backgroundColor: "#00bcd5",
+    borderRadius: 15,
+  },
+  bookTxt: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 16,
+    marginTop: 15,
+    marginBottom: 15,
   },
 });
