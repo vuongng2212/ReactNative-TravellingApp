@@ -104,7 +104,9 @@ export default function PropertyDetailScreen({ route, navigation }) {
             </View>
             <TouchableOpacity
               style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
-              onPress={() => navigation.navigate("ReviewScreen")}
+              onPress={() =>
+                navigation.navigate("ReviewScreen", { id: item.id })
+              }
             >
               <Text style={{ color: "#5a5b5d" }}> reviews </Text>
               <Image source={next} style={{ width: 15, height: 15 }} />

@@ -7,215 +7,201 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  FlatList,
 } from "react-native";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import Svg, { Rect } from "react-native-svg";
 import Back from "../assets/left-arrow.png";
 import StarIcon from "../assets/star.png";
-export default function ReviewScreen({ navigation }) {
-  const barWidth = 300; // Độ rộng của thanh
-  const barHeight = 10; // Chiều cao của thanh
-  const borderRadius = 10; // Độ cong của góc
-  const ratings = {
-    fiveStars: 80,
-    totalReviews: 100, // Tổng số lượt đánh giá
+
+export default function ReviewScreen({ navigation, route }) {
+  const [placeData, setPlaceData] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+
+  useEffect(() => {
+    const fetchPlaceData = async () => {
+      try {
+        console.log("Place ID:", route.params.id);
+
+        const docRef = doc(db, "Place", route.params.id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          console.log("Place Data:", data);
+          console.log("Reviews:", data.Reviews);
+
+          setPlaceData(data);
+          setReviews(data.Reviews || []);
+
+          if (data.Reviews && data.Reviews.length > 0) {
+            const avgRating =
+              data.Reviews.reduce(
+                (acc, review) => acc + Number(review.rating),
+                0
+              ) / data.Reviews.length;
+            setAverageRating(avgRating.toFixed(1));
+          }
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching place data:", error);
+      }
+    };
+
+    fetchPlaceData();
+  }, [route.params.id]);
+
+  // Tính số lượng đánh giá cho mỗi rating
+  const getRatingCount = (rating) => {
+    return reviews.filter((review) => Number(review.rating) === rating).length;
   };
 
-  const fiveStarPercentage = (ratings.fiveStars / ratings.totalReviews) * 100;
-  const totalView = 262;
+  // Tính phần trăm cho mỗi rating
+  const calculatePercentage = (rating) => {
+    const count = getRatingCount(rating);
+    return reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+  };
+
+  const renderReviewItem = ({ item }) => {
+    console.log("Rendering review item:", item);
+
+    return (
+      <View style={styles.reviewItem}>
+        <View style={styles.reviewHeader}>
+          <Image
+            source={{ uri: `${item.userAvatar}.jpg` }}
+            style={styles.avatar}
+            onError={(e) =>
+              console.log("Error loading avatar:", e.nativeEvent.error)
+            }
+          />
+          <View style={styles.reviewInfo}>
+            <Text style={styles.userName}>{item.userName}</Text>
+            <View style={styles.ratingContainer}>
+              {[...Array(5)].map((_, index) => (
+                <Image
+                  key={index}
+                  source={StarIcon}
+                  style={[
+                    styles.starIcon,
+                    { opacity: index < Number(item.rating) ? 1 : 0.3 },
+                  ]}
+                />
+              ))}
+            </View>
+          </View>
+          <Text style={styles.reviewDate}>
+            {item.createdAt?.toDate
+              ? new Date(item.createdAt.toDate()).toLocaleDateString()
+              : "No date"}
+          </Text>
+        </View>
+        <Text style={styles.reviewContent}>{item.content}</Text>
+      </View>
+    );
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
-      {/* Title */}
-      <View style={styles.title}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={Back} style={{ width: 20, height: 20 }} />
-        </TouchableOpacity>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Reviews</Text>
-        <Text></Text>
-      </View>
-
-      {/* Reviews */}
-      <View>
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 22,
-            marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
-          {totalView} reviews
-        </Text>
-        {/* Rating Reviews */}
-        <View style={styles.starView}>
-          <View style={{ marginRight: 100 }}>
-            <Text style={{ fontSize: 18 }}>4.5/5</Text>
-            {/* Star */}
-            <View style={{ flexDirection: "row" }}>
-              <Image source={StarIcon} style={styles.starIcon} />
-              <Image source={StarIcon} style={styles.starIcon} />
-              <Image source={StarIcon} style={styles.starIcon} />
-              <Image source={StarIcon} style={styles.starIcon} />
-              <Image source={StarIcon} style={styles.starIcon} />
-            </View>
-          </View>
-
-          {/* Rate Bar */}
-          {/* Thong ke luot reviews*/}
-          <View>
-            <View style={styles.rateBar}>
-              <View style={{ width: "60%" }}>
-                <Svg height={barHeight} width="100%">
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={barWidth}
-                    height={barHeight}
-                    fill="lightgray"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={`${fiveStarPercentage}%`}
-                    height={barHeight}
-                    fill="gold"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-                </Svg>
-              </View>
-              <Text style={styles.lblRate}>5</Text>
-            </View>
-            <View style={styles.rateBar}>
-              <View style={{ width: "60%" }}>
-                <Svg height={barHeight} width="100%">
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={barWidth}
-                    height={barHeight}
-                    fill="lightgray"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={`${fiveStarPercentage}%`}
-                    height={barHeight}
-                    fill="gold"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-                </Svg>
-              </View>
-              <Text style={styles.lblRate}>4</Text>
-            </View>
-            <View style={styles.rateBar}>
-              <View style={{ width: "60%" }}>
-                <Svg height={barHeight} width="100%">
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={barWidth}
-                    height={barHeight}
-                    fill="lightgray"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={`${fiveStarPercentage}%`}
-                    height={barHeight}
-                    fill="gold"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-                </Svg>
-              </View>
-              <Text style={styles.lblRate}>3</Text>
-            </View>
-            <View style={styles.rateBar}>
-              <View style={{ width: "60%" }}>
-                <Svg height={barHeight} width="100%">
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={barWidth}
-                    height={barHeight}
-                    fill="lightgray"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={`${fiveStarPercentage}%`}
-                    height={barHeight}
-                    fill="gold"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-                </Svg>
-              </View>
-              <Text style={styles.lblRate}>2</Text>
-            </View>
-            <View style={styles.rateBar}>
-              <View style={{ width: "60%" }}>
-                <Svg height={barHeight} width="100%">
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={barWidth}
-                    height={barHeight}
-                    fill="lightgray"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={`${fiveStarPercentage}%`}
-                    height={barHeight}
-                    fill="gold"
-                    rx={borderRadius}
-                    ry={borderRadius}
-                  />
-                </Svg>
-              </View>
-              <Text style={styles.lblRate}>1</Text>
-            </View>
-          </View>
-
-          {/* Detail reviews */}
-          {/* Show all comments */}
-          {/* Using Firebase to load data from array Reviews */}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Title */}
+        <View style={styles.title}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={Back} style={{ width: 20, height: 20 }} />
+          </TouchableOpacity>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Reviews</Text>
+          <Text></Text>
         </View>
+
+        {/* Reviews Summary */}
+        <View style={styles.summaryContainer}>
+          <Text style={styles.totalReviews}>{reviews.length} reviews</Text>
+          <View style={styles.starView}>
+            <View style={{ marginRight: 100 }}>
+              <Text style={{ fontSize: 18 }}>{averageRating}/5</Text>
+              <View style={{ flexDirection: "row" }}>
+                {[...Array(5)].map((_, index) => (
+                  <Image
+                    key={index}
+                    source={StarIcon}
+                    style={[
+                      styles.starIcon,
+                      { opacity: index < Math.round(averageRating) ? 1 : 0.3 },
+                    ]}
+                  />
+                ))}
+              </View>
+            </View>
+
+            {/* Rating Bars */}
+            <View>
+              {[5, 4, 3, 2, 1].map((rating) => (
+                <View key={rating} style={styles.rateBar}>
+                  <View style={{ width: "60%" }}>
+                    <Svg height={10} width="100%">
+                      <Rect
+                        x="0"
+                        y="0"
+                        width="100%"
+                        height={10}
+                        fill="lightgray"
+                        rx={10}
+                        ry={10}
+                      />
+                      <Rect
+                        x="0"
+                        y="0"
+                        width={`${calculatePercentage(rating)}%`}
+                        height={10}
+                        fill="gold"
+                        rx={10}
+                        ry={10}
+                      />
+                    </Svg>
+                  </View>
+                  <Text style={styles.lblRate}>{rating}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+
+        {/* Reviews List */}
+        <FlatList
+          data={reviews}
+          renderItem={renderReviewItem}
+          keyExtractor={(item) => item.id}
+          style={styles.reviewsList}
+          contentContainerStyle={styles.reviewsContent}
+        />
       </View>
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
+    flex: 1,
     backgroundColor: "#fff",
-    paddingLeft: 10,
-    paddingRight: 10,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 10,
+  },
+  summaryContainer: {
+    backgroundColor: "#fff",
   },
   title: {
     marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical: 10,
   },
   starView: {
     margin: 20,
@@ -233,5 +219,55 @@ const styles = StyleSheet.create({
   },
   lblRate: {
     marginLeft: 10,
+  },
+  reviewItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    backgroundColor: "#fff",
+  },
+  reviewHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  reviewInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  reviewContent: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  reviewsList: {
+    flex: 1,
+  },
+  reviewsContent: {
+    paddingBottom: 20,
+  },
+  reviewDate: {
+    color: "#666",
+    fontSize: 12,
+  },
+  totalReviews: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginLeft: 20,
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
   },
 });
