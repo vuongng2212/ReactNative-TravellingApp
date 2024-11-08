@@ -10,7 +10,12 @@ import ReviewScreen from "./components/ReviewScreen";
 import LaunchScreen from "./components/LaunchScreen";
 import SignupScreen from "./components/SignupScreen";
 import HomeScreen from "./components/HomeScreen";
+<<<<<<< HEAD
+import SearchScreen from "./components/SearchScreen";
+
+=======
 import PaymentSuccess from "./components/PaymentSuccess";
+>>>>>>> 78ffa8c2e06790380f1383a3dbf56a4dbb4bc4ef
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -30,6 +35,11 @@ export default function App() {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SearchScreen"
+          component={SearchScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

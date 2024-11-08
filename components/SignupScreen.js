@@ -10,6 +10,7 @@ export default function SignupScreen({navigation}) {
         placeholder="Enter your mobile number"
         keyboardType="phone-pad"
       />
+      {/* thay homescreen bang searchscrenn */}
       <View style={styles.buttonContainer}>
         <Button title="Continue" onPress={() => navigation.navigate('HomeScreen')}/>
       </View>
