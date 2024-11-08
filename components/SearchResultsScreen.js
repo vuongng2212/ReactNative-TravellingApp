@@ -78,7 +78,9 @@ export default function SearchResultsScreen({ navigation }) {
         <TouchableOpacity>
           <Image source={SearchIcon} style={styles.searchImg} />
         </TouchableOpacity>
-        <TextInput placeholder="Anywhere" style={styles.txtInput} />
+        <TextInput placeholder="Anywhere" style={styles.txtInput} onPress={() => {
+          navigation.navigate("PropertyDetailScreen", { item: item });
+        }}/>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image source={AdjustIcon} style={styles.adjust} />
         </TouchableOpacity>

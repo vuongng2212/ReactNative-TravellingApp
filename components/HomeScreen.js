@@ -25,6 +25,7 @@ import Favorite from "../components/Favorite";
 import Bookings from "../components/Bookings";
 import Inbox from "../components/Inbox";
 import Profile from "../components/Profile";
+const Tab = createBottomTabNavigator();
 
 export default function HomeScreen({ navigation }) {
   // Fetch data
@@ -81,8 +82,8 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-      <View style={styles.search}>
-        <TouchableOpacity>
+      <View style={styles.search} >
+        <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
           <Image source={SearchIcon} style={styles.searchImg} />
         </TouchableOpacity>
         <TextInput placeholder="Anywhere" style={styles.txtInput} />
@@ -386,7 +387,14 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
         </View>
-      </Modal> 
+      </Modal>
+      {/* Bottom Navbar */}
+      {/* <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="HomeScreen" component={HomeScreen} />
+          <Tab.Screen name="Favorite" component={Favorite} />
+        </Tab.Navigator>
+      </NavigationContainer> */}
     </SafeAreaView>
   );
 }
