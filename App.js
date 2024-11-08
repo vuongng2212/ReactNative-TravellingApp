@@ -12,13 +12,15 @@ import SignupScreen from "./components/SignupScreen";
 import HomeScreen from "./components/HomeScreen";
 import SearchScreen from "./components/SearchScreen";
 import PaymentSuccess from "./components/PaymentSuccess";
+import DateSelection from "./components/DateSelectionScreen";
+import GuestSelcetion from "./components/GuestSelectionScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SearchResultsScreen">
+      <Stack.Navigator initialRouteName="LaunchScreen">
         <Stack.Screen
           name="LaunchScreen"
           component={LaunchScreen}
@@ -37,6 +39,16 @@ export default function App() {
         <Stack.Screen
           name="SearchScreen"
           component={SearchScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DateSelection"
+          component={DateSelection}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="GuestSelcetion"
+          component={GuestSelcetion}
           options={{ headerShown: false }}
         />
         <Stack.Screen
