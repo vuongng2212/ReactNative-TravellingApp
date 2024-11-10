@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Button, StyleSheet,Image } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { Ionicons } from '@expo/vector-icons';
 
 const SearchScreen = () => {
     const [activeSection, setActiveSection] = useState(null); // Stores which section is active
@@ -38,6 +39,9 @@ const SearchScreen = () => {
     return (
         
         <View style={styles.container}>
+            <TouchableOpacity style={styles.exitButton} >
+                <Ionicons name="close" size={24} color="black" />
+            </TouchableOpacity>
             {/* Location Section */}
             <TouchableOpacity onPress={() => toggleSection('location')}>
                 <View style={styles.section}>
@@ -45,24 +49,25 @@ const SearchScreen = () => {
                     <Text style={styles.sectionValue}>{location}</Text>
                 </View>
             </TouchableOpacity>
-                  <View style={styles.optionsContainer}>
-        <View style={styles.option}>
-          <Image source={{uri: 'https://photo.znews.vn/w860/Uploaded/jaroin/2017_10_02/02_Bavaria_travelandleisure_1.jpg'}} style={styles.optionImage} />
-          <Text style={styles.optionText}>Anywhere</Text>
-        </View>
-        
-        <View style={styles.option}>
-          <Image source={{uri: 'https://media-cdn.tripadvisor.com/media/photo-c/1280x250/17/15/6d/d6/paris.jpg'}} style={styles.optionImage} />
-          <Text style={styles.optionText}>Europe</Text>
-        </View>
-        
-        <View style={styles.option}>
-          <Image source={{uri: 'https://cdnphoto.dantri.com.vn/R5anasgck8LnSKyaL43dDfjt6DY=/thumb_w/960/2020/07/06/thanhbinh-67-docx-1594030048659.jpeg'}} style={styles.optionImage} />
-          <Text style={styles.optionText}>Asia</Text>
-        </View>
-      </View>
+            
             {activeSection === 'location' && (
                 <View style={styles.expandedSection}>
+                    <View style={styles.optionsContainer}>
+                        <View style={styles.option}>
+                        <Image source={{uri: 'https://photo.znews.vn/w860/Uploaded/jaroin/2017_10_02/02_Bavaria_travelandleisure_1.jpg'}} style={styles.optionImage} />
+                        <Text style={styles.optionText}>Anywhere</Text>
+                        </View>
+                        
+                        <View style={styles.option}>
+                        <Image source={{uri: 'https://media-cdn.tripadvisor.com/media/photo-c/1280x250/17/15/6d/d6/paris.jpg'}} style={styles.optionImage} />
+                        <Text style={styles.optionText}>Europe</Text>
+                        </View>
+                        
+                        <View style={styles.option}>
+                        <Image source={{uri: 'https://cdnphoto.dantri.com.vn/R5anasgck8LnSKyaL43dDfjt6DY=/thumb_w/960/2020/07/06/thanhbinh-67-docx-1594030048659.jpeg'}} style={styles.optionImage} />
+                        <Text style={styles.optionText}>Asia</Text>
+                        </View>
+                    </View>
                     <TextInput
                         style={styles.input}
                         placeholder="Enter location"
@@ -139,12 +144,12 @@ const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: '#fff' },
     section: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#eee' },
     sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
-    sectionValue: { fontSize: 14, color: '#888' },
+    sectionValue: { fontSize: 24, color: '#888', },
     expandedSection: { padding: 20, backgroundColor: '#f9f9f9', marginVertical: 10, borderRadius: 10 },
-    buttonsContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20 },
-    clearButton: { color: '#888', fontSize: 16 },
+    buttonsContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20 ,position: 'absolute', bottom: 16, left: 16, right: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',},
+    clearButton: { color: '#888', fontSize: 20 },
     searchButton: { backgroundColor: '#00aaff', padding: 10, borderRadius: 5 },
-    searchButtonText: { color: '#fff', fontWeight: 'bold' },
+    searchButtonText: { color: '#fff', fontWeight: 'bold',fontSize: 20 },
     input: { backgroundColor: '#fff', padding: 10, borderRadius: 5, width: '100%' },
     modalText: { fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: '#333' },
     guestSelector: { flexDirection: 'row', alignItems: 'center', marginVertical: 10 },
@@ -152,6 +157,7 @@ const styles = StyleSheet.create({
   option: { alignItems: 'center' },
   optionImage: { width: 80, height: 80, borderRadius: 8 },
   optionText: { marginTop: 8, fontSize: 16 },
+  exitButton: { position: 'absolute', top: 16, right: 16, zIndex: 1 },
 });
 
 export default SearchScreen;

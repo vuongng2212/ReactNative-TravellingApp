@@ -1,7 +1,12 @@
+
 import { Link } from '@react-navigation/native';
-import { Text, View, TextInput, Button, Image, StyleSheet,Linking } from 'react-native';
-import SearchResultsScreen from "./SearchResultsScreen";
+import { Text, View, TextInput, Button, Image, StyleSheet, Linking } from 'react-native';
+
 export default function SignupScreen({navigation}) {
+  const handleLink = (url) => {
+    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>Create an account</Text>
@@ -10,32 +15,31 @@ export default function SignupScreen({navigation}) {
         placeholder="Enter your mobile number"
         keyboardType="phone-pad"
       />
-      {/* thay homescreen bang searchscrenn */}
+      {/* Change HomeScreen to SearchScreen */}
       <View style={styles.buttonContainer}>
-        <Button title="Continue" onPress={() => navigation.navigate('HomeScreen')}/>
+        <Button title="Continue" onPress={() => navigation.navigate('HomeScreen')} />
       </View>
       <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
         <View style={styles.buttonContainer}>
           <Image style={styles.logo} source={require("../assets/Facebook_Logo.png")} />
-          <a href="https://www.facebook.com/">
-          <Button title="Continue with Facebook" onPress={() => {}} />
-          </a>
+          <Button title="Continue with Facebook" onPress={() => handleLink('https://www.facebook.com/')} />
         </View>
         <View style={styles.buttonContainer}>
           <Image style={styles.logo} source={require("../assets/Apple_logo.png")} />
-          <a href="https://www.facebook.com/">
-          <Button title="Continue with Apple" onPress={() => {}} />
-          </a>
+          <Button title="Continue with Apple" onPress={() => handleLink('https://www.apple.com/')} />
         </View>
         <View style={styles.buttonContainer}>
           <Image style={styles.logo} source={require("../assets/Google__G__logo.png")} />
-          <a href="https://accounts.google.com/v3/signin/identifier?elo=1&ifkv=AcMMx-d6D6UWD3tkue8wihsHJEYKSORS793L2j0Sf11mSP8e6Rq0ZQu8UBGH43uAzfAnsC6Wf3Ngbg&ddm=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin&continue=https%3A%2F%2Faccounts.google.com%2FManageAccount%3Fnc%3D1">
-          <Button title="Continue with Google" onPress={() => {}} />
-          </a>
+          <Button title="Continue with Google" onPress={() => handleLink('https://accounts.google.com/')} />
         </View>
       </View>
-      <Text style={styles.paragraph}>Already have an account ? <a href=''>Login </a></Text>
+      <Text style={styles.paragraph}>
+        Already have an account?{' '}
+        <Text style={styles.linkText} onPress={() => navigation.navigate('LoginScreen')}>
+          Login
+        </Text>
+      </Text>
     </View>
   );
 }
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ecf0f1',
     padding: 8,
-    backgroundColor:"white",
+    backgroundColor: "white",
   },
   paragraph: {
     margin: 24,
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
     width: '80%',
-    fontWeight:'light',
+    fontWeight: '300',
   },
   authOptions: {
     width: '100%',
@@ -77,5 +81,9 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginRight: 10,
+  },
+  linkText: {
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
