@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
+import MapView, { Marker } from 'react-native-maps';
 
 import backIcon from "../assets/backIcon.png";
 import locationIcon from "../assets/location.png";
@@ -35,11 +36,13 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
   const latitude = 10.766454; // Tọa độ vĩ độ
   const longitude = 106.692203; // Tọa độ kinh độ
+
   const openMap = () => {
-    const url = `google.navigation:q=${latitude},${longitude}`;
-    Linking.openURL(url).catch((err) =>
-      console.error("An error occurred", err)
-    );
+    navigation.navigate('MapScreen', {
+      item: item,
+      latitude: latitude,
+      longitude: longitude,
+    });
   };
 
   return (

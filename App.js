@@ -1,26 +1,27 @@
 import { SafeAreaView, Text, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SearchResultsScreen from "./components/SearchResultsScreen";
-import PropertyDetailScreen from "./components/PropertyDetailScreen";
-import FacilitiesANDServiceScreen from "./components/FacilitiesANDServiceScreen";
-import ComfirmAndPay from "./components/ComfirmAndPay";
-import DescriptionScreen from "./components/DescriptionScreen";
-import ReviewScreen from "./components/ReviewScreen";
-import LaunchScreen from "./components/LaunchScreen";
-import SignupScreen from "./components/SignupScreen";
-import HomeScreen from "./components/HomeScreen";
-import SearchScreen from "./components/SearchScreen";
-import PaymentSuccess from "./components/PaymentSuccess";
-import DateSelection from "./components/DateSelectionScreen";
-import GuestSelcetion from "./components/GuestSelectionScreen";
+import SearchResultsScreen from "./screens/SearchResultsScreen";
+import PropertyDetailScreen from "./screens/PropertyDetailScreen";
+import FacilitiesANDServiceScreen from "./screens/FacilitiesANDServiceScreen";
+import ComfirmAndPay from "./screens/ComfirmAndPay";
+import DescriptionScreen from "./screens/DescriptionScreen";
+import ReviewScreen from "./screens/ReviewScreen";
+import LaunchScreen from "./screens/LaunchScreen";
+import SignupScreen from "./screens/SignupScreen";
+import HomeScreen from "./screens/HomeScreen";
+import SearchScreen from "./screens/SearchScreen";
+import PaymentSuccess from "./screens/PaymentSuccess";
+import DateSelection from "./screens/DateSelectionScreen";
+import GuestSelcetion from "./screens/GuestSelectionScreen";
+import MapScreen from "./components/PropertyDetailScreen-MapScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LaunchScreen">
+      <Stack.Navigator initialRouteName="SearchResultsScreen">
         <Stack.Screen
           name="LaunchScreen"
           component={LaunchScreen}
@@ -84,6 +85,11 @@ export default function App() {
         <Stack.Screen
           name="ReviewScreen"
           component={ReviewScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MapScreen"
+          component={MapScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}

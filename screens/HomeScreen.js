@@ -12,6 +12,8 @@ import {
   Modal,
   ScrollView,
 } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { db } from "../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { Checkbox } from "react-native-paper";
@@ -19,9 +21,14 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 // Image
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
+import Favorite from "../components/Favorite";
+import Bookings from "../components/Bookings";
+import Inbox from "../components/Inbox";
+import Profile from "../components/Profile";
+const Tab = createBottomTabNavigator();
 
-export default function SearchResultsScreen({ navigation }) {
-  // Fetch dât
+export default function HomeScreen({ navigation }) {
+  // Fetch data
   const [data, setData] = useState([]);
   // Multi range
   const [range, setRange] = useState([10, 250]);
@@ -75,19 +82,17 @@ export default function SearchResultsScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <View style={styles.search}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("SearchScreen")}>
           <Image source={SearchIcon} style={styles.searchImg} />
         </TouchableOpacity>
-        <TextInput placeholder="Anywhere" style={styles.txtInput} onPress={() => {
-          navigation.navigate("PropertyDetailScreen", { item: item });
-        }}/>
+        <TextInput placeholder="Anywhere" style={styles.txtInput} />
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image source={AdjustIcon} style={styles.adjust} />
         </TouchableOpacity>
       </View>
-      <View style={styles.horizontalLine}></View>
-      <View style={styles.presentTotalPrice}>
-        <Text style={styles.txtPresent}>Present total price</Text>
+      {/* <View style={styles.horizontalLine}></View> */}
+      {/* <View style={styles.presentTotalPrice}>
+        <Text style={styles.txtPresent}>Present total price 123</Text>
         <View
           style={{
             flexDirection: "row",
@@ -104,6 +109,56 @@ export default function SearchResultsScreen({ navigation }) {
             color="#0394ae"
           />
         </View>
+      </View> */}
+      <View style={styles.container2}>
+        <TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 26,
+              borderRadius: 8,
+              paddingVertical: 26,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={styles.menuImg}
+              source={require("../assets/beach.png")}
+            />
+            <Text style={{ fontSize: 20, fontWeight: 400 }}>Beach</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 26,
+              borderRadius: 8,
+              paddingVertical: 26,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={styles.menuImg}
+              source={require("../assets/mountain.png")}
+            />
+            <Text style={{ fontSize: 20, fontWeight: 400 }}>Mountain</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 26,
+              borderRadius: 8,
+              paddingVertical: 26,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={styles.menuImg}
+              source={require("../assets/camping.png")}
+            />
+            <Text style={{ fontSize: 20, fontWeight: 400 }}>Camping</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <FlatList
         data={data}
@@ -362,6 +417,13 @@ export default function SearchResultsScreen({ navigation }) {
           </View>
         </View>
       </Modal>
+      {/* Bottom Navbar */}
+      {/* <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="HomeScreen" component={HomeScreen} />
+          <Tab.Screen name="Favorite" component={Favorite} />
+        </Tab.Navigator>
+      </NavigationContainer> */}
     </SafeAreaView>
   );
 }
@@ -372,6 +434,11 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     backgroundColor: "#ffffff",
     flex: 1, // Đảm bảo modal sẽ hiển thị đúng
+  },
+  container2: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: "20",
   },
   search: {
     flexDirection: "row",
@@ -385,6 +452,12 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     margin: 6,
+  },
+  menuImg: {
+    width: 50,
+    height: 50,
+    margin: 3,
+    borderRadius: 10,
   },
   adjust: {
     width: 25,
