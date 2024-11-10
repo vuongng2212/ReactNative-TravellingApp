@@ -7,14 +7,16 @@ export default function MapScreen({ route, navigation }) {
 
   const openGoogleMaps = () => {
     const googleMapsUrl = `google.navigation:q=${latitude},${longitude}`;
+    const webMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
     
     Linking.canOpenURL(googleMapsUrl).then(supported => {
       if (supported) {
         Linking.openURL(googleMapsUrl);
       } else {
-        alert('Vui lòng cài đặt ứng dụng Google Maps để sử dụng tính năng này');
-        Linking.openURL('market://details?id=com.google.android.apps.maps');
+        Linking.openURL(webMapsUrl);
       }
+    }).catch(err => {
+      Linking.openURL(webMapsUrl);
     });
   };
 
