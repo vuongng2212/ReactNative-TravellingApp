@@ -21,10 +21,10 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 // Image
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
-import Favorite from "../components/Favorite";
-import Bookings from "../components/Bookings";
-import Inbox from "../components/Inbox";
-import Profile from "../components/Profile";
+import Favorite from "../screens/Favorite";
+import Bookings from "../screens/Bookings";
+import Inbox from "../screens/Inbox";
+import Profile from "../screens/Profile";
 const Tab = createBottomTabNavigator();
 
 export default function HomeScreen({ navigation }) {
