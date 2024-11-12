@@ -21,7 +21,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SearchResultsScreen">
+      <Stack.Navigator initialRouteName="LaunchScreen">
         <Stack.Screen
           name="LaunchScreen"
           component={LaunchScreen}
