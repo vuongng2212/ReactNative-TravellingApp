@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text, Linking, ScrollView } from 'r
 import MapView, { Marker } from 'react-native-maps';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const TOMORROW_API_KEY = 'gxjq5wWxkZ5LzHoiWd1ojt5KUxOzI425'; // Thay bằng API key của bạn
+const TOMORROW_API_KEY = 'gxjq5wWxkZ5LzHoiWd1ojt5KUxOzI425'; 
 
 export default function MapScreen({ route, navigation }) {
   const { item, latitude, longitude } = route.params;
