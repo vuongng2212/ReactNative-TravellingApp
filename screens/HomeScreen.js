@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Button, StyleSheet, Image } from 'react-native';
-import { Calendar } from 'react-native-calendars';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-=======
 import React, { useEffect, useState } from "react";
 import {
   Text,
@@ -28,174 +21,564 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 // Image
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
-import Favorite from "../screens/Favorite";
-import Bookings from "../screens/Bookings";
-import Inbox from "../screens/Inbox";
-import Profile from "../screens/Profile";
+// import Favorite from "../screens/Favorite";
+// import Bookings from "../screens/Bookings";
+// import Inbox from "../screens/Inbox";
+// import Profile from "../screens/Profile";
 const Tab = createBottomTabNavigator();
->>>>>>> 5bfbd92e7bdbeb369653d91d2cf9d6ca58fbf2f5
 
-const SearchScreen = () => {
-    const navigation = useNavigation();
-    const [activeSection, setActiveSection] = useState(null); // Stores which section is active
-    const [location, setLocation] = useState('Anywhere');
-    const [dates, setDates] = useState('Choose dates');
-    const [selectedDates, setSelectedDates] = useState({});
-    const [startDay, setStartDay] = useState(null);
-    const [endDay, setEndDay] = useState(null);
-    const [adultGuest, setAdultGuest] = useState(0);
-    const [childGuest, setChildGuest] = useState(0);
+export default function HomeScreen({ navigation }) {
+  // Fetch data
+  const [data, setData] = useState([]);
+  // Multi range
+  const [range, setRange] = useState([10, 250]);
+  // Checkbox
+  const [checkedAll, setChedkedAll] = useState(true);
+  const [checkedEntire, setChedkedEntire] = useState(false);
+  const [checkedPrivate, setChedkedPrivate] = useState(false);
+  const [checkedDormitories, setChedkedDormitories] = useState(false);
+  const [checkedKitchen, setCheckedKitchen] = useState(false);
+  const [checkedPool, setCheckedPool] = useState(false);
+  const [checkedGym, setCheckedGym] = useState(false);
+  const [checkedOutdoor, setCheckedOutdoor] = useState(false);
+  const [checkedInternet, setCheckedInternet] = useState(false);
+  // Model
+  const [isModalVisible, setModalVisible] = useState(false);
 
-    const toggleSection = (section) => {
-        setActiveSection(activeSection === section ? null : section);
+  useEffect(() => {
+    const fetchData = async () => {
+      const querySnapshot = await getDocs(collection(db, "Place"));
+      const fetchedData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setData(fetchedData);
     };
 
-    // Function to handle date selection from the calendar
-    const onDayPress = (day) => {
-        // If `startDay` is not set, set it. If it is set, set `endDay`
-        if (!startDay) {
-            setStartDay(day.dateString);
-            setDates(day.dateString); // Update displayed dates
-        } else if (!endDay) {
-            setEndDay(day.dateString);
-            setDates(`${startDay} - ${day.dateString}`);
-        } else {
-            // Reset both dates if both are set
-            setStartDay(day.dateString);
-            setEndDay(null);
-            setDates(day.dateString);
-        }
-    };
+    fetchData();
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.exitButton}>
-                <Ionicons name="close" size={24} color="black" />
-            </TouchableOpacity>
-            {/* Location Section */}
-            <TouchableOpacity onPress={() => toggleSection('location')}>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Where to?</Text>
-                    <Text style={styles.sectionValue}>{location}</Text>
-                </View>
-            </TouchableOpacity>
-            
-            {activeSection === 'location' && (
-                <View style={styles.expandedSection}>
-                    <View style={styles.optionsContainer}>
-                        <View style={styles.option}>
-                            <Image source={{ uri: 'https://photo.znews.vn/w860/Uploaded/jaroin/2017_10_02/02_Bavaria_travelandleisure_1.jpg' }} style={styles.optionImage} />
-                            <Text style={styles.optionText}>Anywhere</Text>
-                        </View>
-                        <View style={styles.option}>
-                            <Image source={{ uri: 'https://media-cdn.tripadvisor.com/media/photo-c/1280x250/17/15/6d/d6/paris.jpg' }} style={styles.optionImage} />
-                            <Text style={styles.optionText}>Europe</Text>
-                        </View>
-                        <View style={styles.option}>
-                            <Image source={{ uri: 'https://cdnphoto.dantri.com.vn/R5anasgck8LnSKyaL43dDfjt6DY=/thumb_w/960/2020/07/06/thanhbinh-67-docx-1594030048659.jpeg' }} style={styles.optionImage} />
-                            <Text style={styles.optionText}>Asia</Text>
-                        </View>
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter location"
-                        value={location}
-                        onChangeText={setLocation}
-                    />
-                    <Button title="Close" onPress={() => toggleSection(null)} />
-                </View>
-            )}
-
-            {/* Date Section */}
-            <TouchableOpacity onPress={() => toggleSection('dates')}>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>When staying</Text>
-                    <Text style={styles.sectionValue}>{dates}</Text>
-                </View>
-            </TouchableOpacity>
-            {activeSection === 'dates' && (
-                <View style={styles.expandedSection}>
-                    <Calendar
-                        onDayPress={onDayPress}
-                        markedDates={selectedDates}
-                        markingType={'period'}
-                    />
-                    <Button title="Close" onPress={() => toggleSection(null)} />
-                </View>
-            )}
-
-            {/* Guests Section */}
-            <TouchableOpacity onPress={() => toggleSection('guests')}>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>How many guests?</Text>
-                    <Text style={styles.sectionValue}>{`Adults: ${adultGuest}, Children: ${childGuest}`}</Text>
-                </View>
-            </TouchableOpacity>
-            {activeSection === 'guests' && (
-                <View style={styles.expandedSection}>
-                    <Text style={styles.modalText}>Guests</Text>
-                    <View style={styles.guestSelector}>
-                        <Text>Adults</Text>
-                        <Button title="-" onPress={() => setAdultGuest(Math.max(0, adultGuest - 1))} />
-                        <Text>{adultGuest}</Text>
-                        <Button title="+" onPress={() => setAdultGuest(adultGuest + 1)} />
-                    </View>
-                    <View style={styles.guestSelector}>
-                        <Text>Children</Text>
-                        <Button title="-" onPress={() => setChildGuest(Math.max(0, childGuest - 1))} />
-                        <Text>{childGuest}</Text>
-                        <Button title="+" onPress={() => setChildGuest(childGuest + 1)} />
-                    </View>
-                    <Button title="Close" onPress={() => toggleSection(null)} />
-                </View>
-            )}
-
-            {/* Clear All and Search Buttons */}
-            <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={() => {
-                    setLocation('Anywhere');
-                    setDates('Choose dates');
-                    setAdultGuest(0);
-                    setChildGuest(0);
-                    setStartDay(null);
-                    setEndDay(null);
-                    setSelectedDates({});
-                }}>
-                    <Text style={styles.clearButton}>Clear all</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.searchButton} onPress={() => {
-                    navigation.navigate('SearchResultScreen', {
-                        startDay,
-                        endDay,
-                        adultGuest,
-                        childGuest,
-                    });
-                }}>
-                    <Text style={styles.searchButtonText}>Search</Text>
-                </TouchableOpacity>
-            </View>
+  const renderItem = ({ item }) => (
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("PropertyDetailScreen", { item: item });
+        }}
+      >
+        <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.txtRoom}>{item.Name}</Text>
+          <Text style={{ marginTop: 10 }}>{item.Rate}</Text>
         </View>
-    );
-};
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text>{item.Bedrooms}</Text>
+          <Text>${item.Price}/night</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <View style={styles.search}>
+        <TouchableOpacity onPress={() => navigation.navigate("SearchScreen")}>
+          <Image source={SearchIcon} style={styles.searchImg} />
+        </TouchableOpacity>
+        <TextInput placeholder="Anywhere" style={styles.txtInput} />
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Image source={AdjustIcon} style={styles.adjust} />
+        </TouchableOpacity>
+      </View>
+      {/* <View style={styles.horizontalLine}></View> */}
+      {/* <View style={styles.presentTotalPrice}>
+        <Text style={styles.txtPresent}>Present total price 123</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.txtAllInclusive}>All-inclusive, pre-tax</Text>
+          <Checkbox
+            status={checkedAll ? "checked" : "unchecked"}
+            onPress={() => {
+              setChedkedAll(!checkedAll);
+            }}
+            color="#0394ae"
+          />
+        </View>
+      </View> */}
+      <View style={styles.container2}>
+        <TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 26,
+              borderRadius: 8,
+              paddingVertical: 26,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={styles.menuImg}
+              source={require("../assets/beach.png")}
+            />
+            <Text style={{ fontSize: 20, fontWeight: 400 }}>Beach</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 26,
+              borderRadius: 8,
+              paddingVertical: 26,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={styles.menuImg}
+              source={require("../assets/mountain.png")}
+            />
+            <Text style={{ fontSize: 20, fontWeight: 400 }}>Mountain</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 26,
+              borderRadius: 8,
+              paddingVertical: 26,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={styles.menuImg}
+              source={require("../assets/camping.png")}
+            />
+            <Text style={{ fontSize: 20, fontWeight: 400 }}>Camping</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
+
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modelTitle}>
+              <Text></Text>
+              <Text style={styles.txtTitle}>Filters</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text>X</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.horizontaModellLine}></View>
+
+            <ScrollView style={{ maxHeight: "100%", margin: 15 }}>
+              {/* Price range */}
+              <View>
+                <Text style={styles.txtMainContent}>Price range</Text>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <MultiSlider
+                    values={range}
+                    sliderLength={320}
+                    onValuesChange={(values) => setRange(values)}
+                    min={10}
+                    max={250}
+                    step={1}
+                    selectedStyle={{
+                      backgroundColor: "#1EB1FC",
+                    }}
+                    unselectedStyle={{
+                      backgroundColor: "#D3D3D3",
+                    }}
+                    markerStyle={{
+                      backgroundColor: "#1EB1FC",
+                      height: 20,
+                      width: 20,
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={styles.borderRange}>
+                    <View
+                      style={{
+                        marginLeft: 25,
+                        marginRight: 25,
+                        marginTop: 5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <Text>Minimum</Text>
+                      <Text>US$ {range[0]}</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 30 }}>-</Text>
+                  </View>
+                  <View style={styles.borderRange}>
+                    <View
+                      style={{
+                        marginLeft: 25,
+                        marginRight: 25,
+                        marginTop: 5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <Text>Maximum</Text>
+                      <Text>US$ {range[1]}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              {/* Type of place */}
+              <View style={{ marginTop: 25 }}>
+                <Text style={styles.txtMainContent}>Type of place</Text>
+                <View>
+                  <Text style={styles.txtMainTOP}>Entire place</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.txtDetailTOP}>
+                      Entire apartments, condos, house
+                    </Text>
+                    <Checkbox
+                      status={checkedEntire ? "checked" : "unchecked"}
+                      onPress={() => {
+                        setChedkedEntire(!checkedEntire);
+                      }}
+                      color="#0394ae"
+                    />
+                  </View>
+                </View>
+                <View>
+                  <Text style={styles.txtMainTOP}>Private room</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.txtDetailTOP}>
+                      Typically come with a private bathroom unless otherwise
+                      started
+                    </Text>
+                    <Checkbox
+                      status={checkedPrivate ? "checked" : "unchecked"}
+                      onPress={() => {
+                        setChedkedPrivate(!checkedPrivate);
+                      }}
+                      color="#0394ae"
+                    />
+                  </View>
+                </View>
+                <View>
+                  <Text style={styles.txtMainTOP}>Domritories</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.txtDetailTOP}>
+                      Large rooms with multiple beds that are shared with others
+                    </Text>
+                    <Checkbox
+                      status={checkedDormitories ? "checked" : "unchecked"}
+                      onPress={() => {
+                        setChedkedDormitories(!checkedDormitories);
+                      }}
+                      color="#0394ae"
+                    />
+                  </View>
+                </View>
+              </View>
+              {/* Room and bed */}
+              <View style={styles.modalText}>
+                <Text style={styles.txtMainContent}>Rooms and beds</Text>
+                <TextInput
+                  placeholder="Bedrooms"
+                  style={styles.txtRoomandBed}
+                />
+                <View style={styles.horizontaModellLine}></View>
+                <TextInput placeholder="Beds" style={styles.txtRoomandBed} />
+                <View style={styles.horizontaModellLine}></View>
+                <TextInput
+                  placeholder="Bathrooms"
+                  style={styles.txtRoomandBed}
+                />
+                <View style={styles.horizontaModellLine}></View>
+              </View>
+              {/* Facilities */}
+              <View>
+                <Text style={styles.txtMainContent}>Facilities</Text>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Kitchen</Text>
+                  <Checkbox
+                    status={checkedKitchen ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedKitchen(!checkedKitchen);
+                    }}
+                    color="#0394ae"
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Pool</Text>
+                  <Checkbox
+                    status={checkedPool ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedPool(!checkedPool);
+                    }}
+                    color="#0394ae"
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Gym</Text>
+                  <Checkbox
+                    status={checkedGym ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedGym(!checkedGym);
+                    }}
+                    color="#0394ae"
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Outdoor space</Text>
+                  <Checkbox
+                    status={checkedOutdoor ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedOutdoor(!checkedOutdoor);
+                    }}
+                    color="#0394ae"
+                  />
+                </View>
+                <View style={styles.viewFacilities}>
+                  <Text style={styles.txtFacilites}>Internet access</Text>
+                  <Checkbox
+                    status={checkedInternet ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setCheckedInternet(!checkedInternet);
+                    }}
+                    color="#0394ae"
+                  />
+                </View>
+              </View>
+            </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginLeft: 15,
+                marginRight: 15,
+              }}
+            >
+              <TouchableOpacity>
+                <Text style={{ color: "#b1b2b6" }}>Clear all</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>View Results</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {/* Bottom Navbar */}
+      {/* <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="HomeScreen" component={HomeScreen} />
+          <Tab.Screen name="Favorite" component={Favorite} />
+        </Tab.Navigator>
+      </NavigationContainer> */}
+    </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-    section: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#eee' },
-    sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
-    sectionValue: { fontSize: 24, color: '#888' },
-    expandedSection: { padding: 20, backgroundColor: '#f9f9f9', marginVertical: 10, borderRadius: 10 },
-    buttonsContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, position: 'absolute', bottom: 16, left: 16, right: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    clearButton: { color: '#888', fontSize: 20 },
-    searchButton: { backgroundColor: '#00aaff', padding: 10, borderRadius: 5 },
-    searchButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 20 },
-    input: { backgroundColor: '#fff', padding: 10, borderRadius: 5, width: '100%' },
-    modalText: { fontSize: 18, fontWeight: 'bold', marginBottom: 20, color: '#333' },
-    guestSelector: { flexDirection: 'row', alignItems: 'center', marginVertical: 10 },
-    optionsContainer: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 16 },
-    option: { alignItems: 'center' },
-    optionImage: { width: 80, height: 80, borderRadius: 8 },
-    optionText: { marginTop: 8, fontSize: 16 },
-    exitButton: { position: 'absolute', top: 16, right: 16, zIndex: 1 },
+  container: {
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: "#ffffff",
+    flex: 1, // Đảm bảo modal sẽ hiển thị đúng
+  },
+  container2: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: "20",
+  },
+  search: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "gray",
+  },
+  searchImg: {
+    width: 25,
+    height: 25,
+    margin: 6,
+  },
+  menuImg: {
+    width: 50,
+    height: 50,
+    margin: 3,
+    borderRadius: 10,
+  },
+  adjust: {
+    width: 25,
+    height: 25,
+    margin: 6,
+  },
+  txtInput: {
+    fontSize: 20,
+    flex: 1,
+  },
+  presentTotalPrice: {
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 20,
+    borderColor: "#f7f7f7",
+  },
+  txtPresent: {
+    margin: 5,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  txtAllInclusive: {
+    color: "gray",
+    fontSize: 14,
+    marginLeft: 5,
+    marginBottom: 5,
+  },
+  img: {
+    width: "100%",
+    height: 300,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  txtRoom: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: 10,
+  },
+  horizontalLine: {
+    height: 3,
+    marginTop: 25,
+    backgroundColor: "#f6f6f6",
+    width: "100%",
+  },
+  horizontaModellLine: {
+    height: 3,
+    marginTop: 10,
+    backgroundColor: "#f6f6f6",
+    width: "100%",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "100%",
+    height: "70%",
+    padding: 20,
+    backgroundColor: "#ffffff",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  modelTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  txtTitle: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  modalText: {
+    fontSize: 16,
+    alignItems: "flex-start",
+    marginTop: 25,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: "#00bfd1",
+    borderRadius: 5,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  txtRoomandBed: {
+    fontSize: 14,
+    marginTop: 10,
+  },
+  txtMainContent: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 25,
+  },
+  txtFacilites: {
+    fontSize: 16,
+  },
+  viewFacilities: {
+    flexDirection: "row",
+    marginBottom: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  borderRange: {
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: 10,
+    borderColor: "#c6c8c7",
+  },
+  txtMainTOP: {
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  txtDetailTOP: {
+    marginTop: 5,
+    color: "#9fa0a5",
+    width: "85%",
+  },
 });
-
-export default SearchScreen;
