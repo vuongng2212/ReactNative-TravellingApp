@@ -1,8 +1,39 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Button, StyleSheet, Image } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+=======
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  StatusBar,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  SafeAreaView,
+  Modal,
+  ScrollView,
+} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { db } from "../firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { Checkbox } from "react-native-paper";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
+// Image
+import SearchIcon from "../assets/SearchIcon.png";
+import AdjustIcon from "../assets/AdjustIcon.png";
+import Favorite from "../screens/Favorite";
+import Bookings from "../screens/Bookings";
+import Inbox from "../screens/Inbox";
+import Profile from "../screens/Profile";
+const Tab = createBottomTabNavigator();
+>>>>>>> 5bfbd92e7bdbeb369653d91d2cf9d6ca58fbf2f5
 
 const SearchScreen = () => {
     const navigation = useNavigation();
