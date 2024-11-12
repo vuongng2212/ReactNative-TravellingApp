@@ -1,19 +1,15 @@
-import { Text, View, StyleSheet, Image,TouchableOpacity } from 'react-native';
-//import SignupScreen from "./components/SignupScreen";
-export default function AssetExample({navigation}) {
+import { Text, View, StyleSheet, Image } from 'react-native';
+import { useEffect } from 'react';
+
+export default function AssetExample({ navigation }) {
+  useEffect(() => {
+    
+    navigation.navigate('SignupScreen');
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={{
-        //backgroundColor:'#E94141',
-        color:'white',
-        padding:1,
-        borderRadius:1
-      }}
-      
-       onPress={() => navigation.navigate('SignupScreen')}
-      >
       <Image style={styles.logo} source={require('../assets/logoStart.png')} />
-      </TouchableOpacity>
     </View>
   );
 }
@@ -23,8 +19,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
-    flex:1,
-    backgroundColor:'#fff',
+    flex: 1,
+    backgroundColor: '#fff',
   },
   paragraph: {
     margin: 24,
@@ -37,5 +33,5 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     resizeMode: 'contain',
-  }
+  },
 });
