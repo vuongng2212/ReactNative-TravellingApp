@@ -20,7 +20,9 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
 
-export default function SearchResultsScreen({ navigation }) {
+export default function SearchResultsScreen({ navigation, route }) {
+  const { location, startDay, endDay, adultGuest, childGuest } = route.params;
+  const searchParams = `${location}, ${startDay}, ${endDay}, ${adultGuest}, ${childGuest}`;
   // Fetch data
   const [data, setData] = useState([]);
   // Multi range
@@ -74,22 +76,25 @@ export default function SearchResultsScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      {/* Search Area */}
       <View style={styles.search}>
         <TouchableOpacity>
           <Image source={SearchIcon} style={styles.searchImg} />
         </TouchableOpacity>
         <TextInput
-          placeholder="Anywhere"
+          placeholder={searchParams}
           style={styles.txtInput}
           onPress={() => {
-            navigation.navigate("PropertyDetailScreen", { item: item });
+            console.log(searchParams)
           }}
         />
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image source={AdjustIcon} style={styles.adjust} />
         </TouchableOpacity>
       </View>
+      {/* Horizontal line */}
       <View style={styles.horizontalLine}></View>
+      {/* Present total price */}
       <View style={styles.presentTotalPrice}>
         <Text style={styles.txtPresent}>Present total price</Text>
         <View
@@ -109,12 +114,13 @@ export default function SearchResultsScreen({ navigation }) {
           />
         </View>
       </View>
+      {/* Flat list */}
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
-
+      {/* Modal */}   
       <Modal
         transparent={true}
         visible={isModalVisible}

@@ -133,11 +133,12 @@ const SearchScreen = () => {
                     <Text style={styles.clearButton}>Clear all</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.searchButton} onPress={() => {
-                    navigation.navigate('SearchResultScreen', {
-                        startDay,
-                        endDay,
-                        adultGuest,
-                        childGuest,
+                    navigation.navigate('SearchResultsScreen', {
+                        location: location,
+                        startDay: startDay  ,
+                        endDay: endDay,
+                        adultGuest: adultGuest,
+                        childGuest: childGuest,
                     });
                 }}>
                     <Text style={styles.searchButtonText}>Search</Text>
