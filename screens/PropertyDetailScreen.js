@@ -195,7 +195,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
                   margin: 10,
                   alignItems: "center",
                 }}
-                onPress={() => navigation.navigate("ReviewScreen")}
+                onPress={() => navigation.navigate("ReviewScreen", { id: item.id })}
               >
                 <Text style={{ color: "#5a5b5d" }}>See all </Text>
                 <Image source={next} style={{ width: 10, height: 10 }} />
