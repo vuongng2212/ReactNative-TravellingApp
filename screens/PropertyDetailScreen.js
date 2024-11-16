@@ -34,10 +34,9 @@ export default function PropertyDetailScreen({ route, navigation }) {
     return text;
   };
 
-  const latitude = 10.766454; // Tọa độ vĩ độ
-  const longitude = 106.692203; // Tọa độ kinh độ
-
-  const openMap = () => {
+  const openMap = (item) => {
+    const latitude = parseFloat(item.Cord.latitude);
+    const longitude = parseFloat(item.Cord.longitude);
     navigation.navigate('MapScreen', {
       item: item,
       latitude: latitude,
@@ -50,7 +49,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <ScrollView>
         <View>
-          <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
+          <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />
 
           <TouchableOpacity
             style={styles.overlayIMG}
@@ -60,13 +59,12 @@ export default function PropertyDetailScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.container}>
-          <Text style={styles.txtName}>{item.Name}</Text>
           {/* Name and Address */}
+          <Text style={styles.txtName}>{item.Place.txtName}</Text>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 7,
             }}
           >
             <Image source={locationIcon} style={{ width: 25, height: 25 }} />
@@ -77,12 +75,12 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 width: "100%",
               }}
             >
-              <Text style={{ width: "70%" }}>{item.Address}</Text>
+              <Text style={{ width: "70%" }}>{item.Address.adr}</Text>
               <TouchableOpacity
                 style={{
                   width: "30%",
                 }}
-                onPress={openMap}
+                onPress={() => openMap(item)}
               >
                 <Text
                   style={{
@@ -103,7 +101,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
               style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
             >
               <Image source={star} style={{ width: 15, height: 15 }} />
-              <Text> {item.Rate}/5</Text>
+              <Text> {item.Place.rate}/5</Text>
             </View>
             <TouchableOpacity
               style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
@@ -128,12 +126,12 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
             <View>
               <Text style={styles.facilitiesTxt}>
-                {item.Guest} Guests {item.Bedrooms} Bedrooms {item.Beds} Beds
-                {item.Bathrooms} Bath
+                {item.Place.guest} Guests {item.Room.bedrooms} Bedrooms {item.Room.beds} Beds
+                {item.Place.bathrooms} Bath
               </Text>
             </View>
 
-            {item.Internet && (
+            {item.Facilities.internet && (  
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Internet} style={styles.facilitiesImg} />
@@ -141,7 +139,8 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 </View>
               </View>
             )}
-            {item.Kitchen && (
+
+            {item.Facilities.kitchen && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Kitchen} style={styles.facilitiesImg} />
@@ -149,7 +148,8 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 </View>
               </View>
             )}
-            {item.Pool && (
+
+            {item.Facilities.pool && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Pool} style={styles.facilitiesImg} />
@@ -157,7 +157,8 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 </View>
               </View>
             )}
-            {item.Outdoor && (
+
+            {item.Facilities.outdoor && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -165,6 +166,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 </View>
               </View>
             )}
+
             <TouchableOpacity
               style={styles.btn}
               onPress={() =>
@@ -272,11 +274,11 @@ export default function PropertyDetailScreen({ route, navigation }) {
           </View>
           <View>
             <Image
-              source={{ uri: `${item.Image}.jpg` }}
+              source={{ uri: `${item.Place.img}.jpg` }}
               style={styles.DescriptionImg}
             />
             <Text style={styles.DescriptionTxt}>
-              {limitWords(item.Description, 25)}
+              {limitWords(item.Place.description, 25)}
             </Text>
           </View>
           <TouchableOpacity
@@ -299,7 +301,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
           >
             <View style={{ flexDirection: "row" }}>
               <Text>From: </Text>
-              <Text style={{ fontWeight: "bold" }}>${item.Price}</Text>
+              <Text style={{ fontWeight: "bold" }}>${item.Place.price}</Text>
               <Text>/night</Text>
             </View>
             <TouchableOpacity

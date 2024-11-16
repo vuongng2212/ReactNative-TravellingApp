@@ -99,8 +99,8 @@ export default function MapScreen({ route, navigation }) {
             latitude: latitude,
             longitude: longitude,
           }}
-          title={item.Name}
-          description={item.Address}
+          title={item.Place.name}
+          description={item.Address.adr}
         />
       </MapView>
       

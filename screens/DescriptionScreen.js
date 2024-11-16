@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -13,14 +13,17 @@ import locationIcon from "../assets/location.png";
 
 export default function DescriptionScreen({ route, navigation }) {
   const { item } = route.params;
-  const latitude = 10.766454; // Tọa độ vĩ độ
-  const longitude = 106.692203; // Tọa độ kinh độ
-  const openMap = () => {
-    const url = `google.navigation:q=${latitude},${longitude}`;
-    Linking.openURL(url).catch((err) =>
-      console.error("An error occurred", err)
-    );
+
+  const openMap = (item) => {
+    const latitude = parseFloat(item.Cord.latitude);
+    const longitude = parseFloat(item.Cord.longitude);
+    navigation.navigate('MapScreen', {
+      item: item,
+      latitude: latitude,
+      longitude: longitude,
+    });
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -35,8 +38,8 @@ export default function DescriptionScreen({ route, navigation }) {
       </View>
 
       {/* Image */}
-      <Image source={{ uri: `${item.Image}.png` }} style={styles.img} />
-      <Text style={styles.DescriptionTxt}>{item.Description}</Text>
+      <Image source={{ uri: `${item.Place.img}.png` }} style={styles.img} />
+      <Text style={styles.DescriptionTxt}>{item.Place.description}</Text>
       <View
         style={{
           flexDirection: "row",
@@ -52,12 +55,12 @@ export default function DescriptionScreen({ route, navigation }) {
             width: "100%",
           }}
         >
-          <Text style={{ width: "70%" }}>{item.Address}</Text>
+          <Text style={{ width: "70%" }}>{item.Address.adr}</Text>
           <TouchableOpacity
             style={{
               width: "30%",
             }}
-            onPress={openMap}
+            onPress={() => openMap(item)}
           >
             <Text
               style={{

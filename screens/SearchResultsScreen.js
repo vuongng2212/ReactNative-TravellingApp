@@ -21,8 +21,11 @@ import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
 
 export default function SearchResultsScreen({ navigation, route }) {
-  const { location, startDay, endDay, adultGuest, childGuest } = route.params;
-  const searchParams = `${location}, ${startDay}, ${endDay}, ${adultGuest}, ${childGuest}`;
+  let searchParams = "Anywhere";
+  if(route.params!==undefined){
+    const { location, startDay, endDay, adultGuest, childGuest } = route.params;
+    searchParams = `${location}, ${startDay}, ${endDay}, ${adultGuest}, ${childGuest}`;
+  }
   // Fetch data
   const [data, setData] = useState([]);
   // Multi range
@@ -68,6 +71,25 @@ export default function SearchResultsScreen({ navigation, route }) {
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text>{item.Bedrooms}</Text>
           <Text>${item.Price}/night</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+  const renderItemTest = ({ item }) => (
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("PropertyDetailScreen", { item: item });
+        }}
+      >
+        <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.txtRoom}>{item.Place.name}</Text>
+          <Text style={{ marginTop: 10 }}>{item.Place.rate}</Text>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text>{item.Room.bedrooms}</Text>
+          <Text>${item.Place.price}/night</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -118,7 +140,7 @@ export default function SearchResultsScreen({ navigation, route }) {
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        renderItem={renderItemTest}
       />
       {/* Modal */}   
       <Modal
@@ -129,6 +151,7 @@ export default function SearchResultsScreen({ navigation, route }) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            {/* Filter title */}
             <View style={styles.modelTitle}>
               <Text></Text>
               <Text style={styles.txtTitle}>Filters</Text>
