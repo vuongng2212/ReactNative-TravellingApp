@@ -70,7 +70,15 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-
+          {item.Gym && (
+            <View>
+              <View style={styles.facilitiesItem}>
+                <Image source={Gym} style={styles.facilitiesImg} />
+                <Text style={styles.facilitiesTxt}>Gym</Text>
+              </View>
+              <View style={styles.honrizonLine}></View>
+            </View>
+          )}
           {item.Pool && (
             <View>
               <View style={styles.facilitiesItem}>
