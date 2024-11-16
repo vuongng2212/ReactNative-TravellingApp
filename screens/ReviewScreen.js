@@ -8,31 +8,32 @@ import {
   StatusBar,
   StyleSheet,
   FlatList,
+  Modal,
+  TextInput,
 } from "react-native";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import Svg, { Rect } from "react-native-svg";
 import Back from "../assets/left-arrow.png";
 import StarIcon from "../assets/star.png";
+import ReviewModal from '../components/Review-Modal';
 
 export default function ReviewScreen({ navigation, route }) {
   const [placeData, setPlaceData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newRating, setNewRating] = useState(5);
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
-        console.log("Place ID:", route.params.id);
-
         const docRef = doc(db, "Place", route.params.id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const data = docSnap.data();
-          console.log("Place Data:", data);
-          console.log("Reviews:", data.Reviews);
-
           setPlaceData(data);
           setReviews(data.Reviews || []);
 
@@ -67,8 +68,6 @@ export default function ReviewScreen({ navigation, route }) {
   };
 
   const renderReviewItem = ({ item }) => {
-    console.log("Rendering review item:", item);
-
     return (
       <View style={styles.reviewItem}>
         <View style={styles.reviewHeader}>
@@ -103,6 +102,18 @@ export default function ReviewScreen({ navigation, route }) {
         <Text style={styles.reviewContent}>{item.content}</Text>
       </View>
     );
+  };
+
+  const handleSubmitReview = () => {
+    setModalVisible(false);
+    setComment('');
+    setNewRating(5);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setComment('');
+    setNewRating(5);
   };
 
   return (
@@ -179,6 +190,24 @@ export default function ReviewScreen({ navigation, route }) {
           contentContainerStyle={styles.reviewsContent}
         />
       </View>
+      <TouchableOpacity
+        style={styles.addReviewButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+          Add Review
+        </Text>
+      </TouchableOpacity>
+
+      <ReviewModal
+        visible={modalVisible}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitReview}
+        rating={newRating}
+        setRating={setNewRating}
+        comment={comment}
+        setComment={setComment}
+      />
     </SafeAreaView>
   );
 }
@@ -270,4 +299,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 5,
   },
+  addReviewButton: {
+    backgroundColor: '#58b5b9',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    margin: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0
+  }
 });
