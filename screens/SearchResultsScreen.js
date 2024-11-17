@@ -19,6 +19,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 // Image
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
+import PropertyList from '../components/SearchResultsScreen-PropertyList';
 
 export default function SearchResultsScreen({ navigation, route }) {
   let searchParams = "Anywhere";
@@ -55,45 +56,6 @@ export default function SearchResultsScreen({ navigation, route }) {
 
     fetchData();
   }, []);
-
-  const renderItem = ({ item }) => (
-    <View>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("PropertyDetailScreen", { item: item });
-        }}
-      >
-        <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.txtRoom}>{item.Name}</Text>
-          <Text style={{ marginTop: 10 }}>{item.Rate}</Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>{item.Bedrooms}</Text>
-          <Text>${item.Price}/night</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
-  const renderItemTest = ({ item }) => (
-    <View>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("PropertyDetailScreen", { item: item });
-        }}
-      >
-        <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.txtRoom}>{item.Place.name}</Text>
-          <Text style={{ marginTop: 10 }}>{item.Place.rate}</Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>{item.Room.bedrooms}</Text>
-          <Text>${item.Place.price}/night</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -137,11 +99,7 @@ export default function SearchResultsScreen({ navigation, route }) {
         </View>
       </View>
       {/* Flat list */}
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItemTest}
-      />
+      <PropertyList data={data} navigation={navigation} />
       {/* Modal */}   
       <Modal
         transparent={true}
@@ -444,17 +402,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
     marginBottom: 5,
-  },
-  img: {
-    width: "100%",
-    height: 300,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  txtRoom: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginTop: 10,
   },
   horizontalLine: {
     height: 3,
