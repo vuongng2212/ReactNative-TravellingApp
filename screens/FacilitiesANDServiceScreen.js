@@ -47,12 +47,12 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
         <View style={{ marginLeft: 10 }}>
           <View>
             <Text style={styles.facilitiesTxt}>
-              {item.Guest} Guests {item.Bedrooms} Bedrooms {item.Beds} Beds
-              {item.Bathrooms} Bath
+              {item.Facilities.guest} Guests {item.Facilities.bedrooms} Bedrooms {item.Facilities.beds} Beds
+              {item.Facilities.bathrooms} Bath
             </Text>
           </View>
 
-          {item.Internet && (
+          {item.Facilities.internet && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Internet} style={styles.facilitiesImg} />
@@ -61,7 +61,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Kitchen && (
+          {item.Facilities.kitchen && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Kitchen} style={styles.facilitiesImg} />
@@ -70,7 +70,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Gym && (
+          {item.Facilities.gym && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Gym} style={styles.facilitiesImg} />
@@ -79,7 +79,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Pool && (
+          {item.Facilities.pool && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Pool} style={styles.facilitiesImg} />
@@ -88,7 +88,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Outdoor && (
+          {item.Facilities.outdoor && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -120,7 +120,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
           Cleaning and laundry
         </Text>
         <View style={{ marginLeft: 10 }}>
-          {item.Services.Cleaning.Washer && (
+          {item.Services.cleaning.washer && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -129,7 +129,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Services.Cleaning.Dryer && (
+          {item.Services.cleaning.dryer && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -138,7 +138,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Services.Cleaning.Iron && (
+          {item.Services.cleaning.iron && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -158,7 +158,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
           Bathroom
         </Text>
         <View style={{ marginLeft: 10 }}>
-          {item.Services.Bathroom.Bathtub && (
+          {item.Services.bathroom.bathtub && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -167,11 +167,11 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Services.Bathroom.HairDryer && (
+          {item.Services.bathroom.hairDryer && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
-                <Text style={styles.facilitiesTxt}>Dryer</Text>
+                <Text style={styles.facilitiesTxt}>Hair dryer</Text>
               </View>
               <View style={styles.honrizonLine}></View>
             </View>

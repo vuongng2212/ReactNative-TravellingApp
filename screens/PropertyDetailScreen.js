@@ -205,7 +205,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
             </View>
             <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
               <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-                {item.Rate}
+                {item.Place.rate}
               </Text>
               <Text>/5</Text>
             </View>
@@ -268,7 +268,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}>
               Description
             </Text>
           </View>
