@@ -15,7 +15,7 @@ const PropertyList = ({ data, navigation }) => {
           <Text style={{ marginTop: 10 }}>{item.Place.rate}</Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>{item.Room.bedrooms}</Text>
+          <Text>{item.Room.bedrooms.quantity}</Text>
           <Text>${item.Place.price}/night</Text>
         </View>
       </TouchableOpacity>

@@ -30,7 +30,7 @@ export default function SearchResultsScreen({ navigation, route }) {
   // Fetch data
   const [data, setData] = useState([]);
   // Multi range
-  const [range, setRange] = useState([10, 250]);
+  const [range, setRange] = useState([10, 500]);
   // Checkbox
   const [checkedAll, setChedkedAll] = useState(true);
   const [checkedEntire, setChedkedEntire] = useState(false);
@@ -43,6 +43,11 @@ export default function SearchResultsScreen({ navigation, route }) {
   const [checkedInternet, setCheckedInternet] = useState(false);
   // Model
   const [isModalVisible, setModalVisible] = useState(false);
+  // Thêm states cho Rooms and beds
+  const [bedrooms, setBedrooms] = useState('');
+  const [beds, setBeds] = useState('');
+  const [bathrooms, setBathrooms] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +61,53 @@ export default function SearchResultsScreen({ navigation, route }) {
 
     fetchData();
   }, []);
+  const handleFilter = () => {
+    const filtered = data.filter(item => {
+      // Lọc theo giá
+      if (item.Place.price < range[0] || item.Place.price > range[1]) {
+        return false;
+      }
+
+      // Lọc theo loại chỗ ở (nếu có checkbox được chọn)
+      if (checkedEntire || checkedPrivate || checkedDormitories) {
+        if (checkedEntire && item.TypeOfPlace !== "Entire") return false;
+        if (checkedPrivate && item.TypeOfPlace !== "Private") return false;
+        if (checkedDormitories && item.TypeOfPlace !== "Dormitories") return false;
+      }
+
+      // Lọc theo tiện nghi
+      if (checkedKitchen && !item.Facilities.kitchen) return false;
+      if (checkedPool && !item.Facilities.pool) return false;
+      if (checkedGym && !item.Facilities.gym) return false;
+      if (checkedOutdoor && !item.Facilities.outdoor) return false;
+      if (checkedInternet && !item.Facilities.internet) return false;
+
+      // Lọc theo số phòng
+      if (bedrooms && item.Room.bedrooms < parseInt(bedrooms)) return false;
+      if (beds && item.Room.beds < parseInt(beds)) return false;
+      if (bathrooms && item.Room.bathrooms < parseInt(bathrooms)) return false;
+
+      return true;
+    });
+    setFilteredData(filtered);
+    setModalVisible(false);
+  };
+
+  const handleClearAll = () => {
+    setRange([10, 500]);
+    setChedkedEntire(false);
+    setChedkedPrivate(false);
+    setChedkedDormitories(false);
+    setCheckedKitchen(false);
+    setCheckedPool(false);
+    setCheckedGym(false);
+    setCheckedOutdoor(false);
+    setCheckedInternet(false);
+    setBedrooms('');
+    setBeds('');
+    setBathrooms('');
+    setFilteredData([]);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,7 +151,10 @@ export default function SearchResultsScreen({ navigation, route }) {
         </View>
       </View>
       {/* Flat list */}
-      <PropertyList data={data} navigation={navigation} />
+      <PropertyList 
+        data={filteredData.length > 0 ? filteredData : data} 
+        navigation={navigation} 
+      />
       {/* Modal */}   
       <Modal
         transparent={true}
@@ -131,7 +186,7 @@ export default function SearchResultsScreen({ navigation, route }) {
                     sliderLength={320}
                     onValuesChange={(values) => setRange(values)}
                     min={10}
-                    max={250}
+                    max={500}
                     step={1}
                     selectedStyle={{
                       backgroundColor: "#1EB1FC",
@@ -264,13 +319,25 @@ export default function SearchResultsScreen({ navigation, route }) {
                 <TextInput
                   placeholder="Bedrooms"
                   style={styles.txtRoomandBed}
+                  value={bedrooms}
+                  onChangeText={setBedrooms}
+                  keyboardType="numeric"
                 />
                 <View style={styles.horizontaModellLine}></View>
-                <TextInput placeholder="Beds" style={styles.txtRoomandBed} />
+                <TextInput 
+                  placeholder="Beds" 
+                  style={styles.txtRoomandBed}
+                  value={beds}
+                  onChangeText={setBeds}
+                  keyboardType="numeric"
+                />
                 <View style={styles.horizontaModellLine}></View>
                 <TextInput
                   placeholder="Bathrooms"
                   style={styles.txtRoomandBed}
+                  value={bathrooms}
+                  onChangeText={setBathrooms}
+                  keyboardType="numeric"
                 />
                 <View style={styles.horizontaModellLine}></View>
               </View>
@@ -338,13 +405,11 @@ export default function SearchResultsScreen({ navigation, route }) {
                 marginRight: 15,
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleClearAll}>
                 <Text style={{ color: "#b1b2b6" }}>Clear all</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(false);
-                }}
+                onPress={handleFilter}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>View Results</Text>

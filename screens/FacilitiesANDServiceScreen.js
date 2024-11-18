@@ -47,8 +47,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
         <View style={{ marginLeft: 10 }}>
           <View>
             <Text style={styles.facilitiesTxt}>
-              {item.Facilities.guest} Guests {item.Facilities.bedrooms} Bedrooms {item.Facilities.beds} Beds
-              {item.Facilities.bathrooms} Bath
+              {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms {item.Room.beds.quantity } Beds {item.Room.bathrooms.quantity} Bath
             </Text>
           </View>
 
@@ -158,7 +157,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
           Bathroom
         </Text>
         <View style={{ marginLeft: 10 }}>
-          {item.Services.bathroom.bathtub && (
+          {item.Room.bathrooms.bathtub && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -167,7 +166,7 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
               <View style={styles.honrizonLine}></View>
             </View>
           )}
-          {item.Services.bathroom.hairDryer && (
+          {item.Room.bathrooms.hairDryer && (
             <View>
               <View style={styles.facilitiesItem}>
                 <Image source={Outdoor} style={styles.facilitiesImg} />

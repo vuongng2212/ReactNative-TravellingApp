@@ -43,7 +43,6 @@ export default function PropertyDetailScreen({ route, navigation }) {
       longitude: longitude,
     });
   };
-
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -126,8 +125,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
             <View>
               <Text style={styles.facilitiesTxt}>
-                {item.Place.guest} Guests {item.Room.bedrooms} Bedrooms {item.Room.beds} Beds
-                {item.Place.bathrooms} Bath
+                {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms {item.Room.beds.quantity} Beds {item.Room.bathrooms.quantity} Bath
               </Text>
             </View>
 
