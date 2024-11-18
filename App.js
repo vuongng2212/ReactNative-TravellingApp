@@ -15,7 +15,7 @@ import PaymentSuccess from "./screens/PaymentSuccess";
 import DateSelection from "./screens/DateSelectionScreen";
 import GuestSelcetion from "./screens/GuestSelectionScreen";
 import MapScreen from "./components/PropertyDetailScreen-MapScreen";
-
+import PoliciesScreen from "./screens/PoliciesScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -90,6 +90,11 @@ export default function App() {
         <Stack.Screen
           name="MapScreen"
           component={MapScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PoliciesScreen"
+          component={PoliciesScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}

@@ -125,7 +125,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
             <View>
               <Text style={styles.facilitiesTxt}>
-                {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms {item.Room.beds.quantity} Beds {item.Room.bathrooms.quantity} Bath
+                {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms {item.Room.beds.quantity } Beds {item.Room.bathrooms.quantity} Bath
               </Text>
             </View>
 
@@ -227,11 +227,11 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 <Text style={{ fontWeight: "bold" }}>House rules</Text>
                 <View style={styles.ruleInOut}>
                   <Image source={Clock} style={{ width: 15, height: 15 }} />
-                  <Text> Earliest check in time:</Text>
+                  <Text> Check in time: {item.Policies.checkIn.from} - {item.Policies.checkIn.to}</Text>
                 </View>
                 <View style={styles.ruleInOut}>
                   <Image source={Clock} style={{ width: 15, height: 15 }} />
-                  <Text> Earliest check out time:</Text>
+                  <Text> Check out time before {item.Policies.checkOut}</Text>
                 </View>
               </View>
             </View>
@@ -248,10 +248,9 @@ export default function PropertyDetailScreen({ route, navigation }) {
               </Text>
             </View>
             <Text>
-              It's
-              alwayaapfpfsajsappojffoppofapafjpofasjafpafspofapfaosjopfajpofapofjasfoasposp
+              View more to see policy information.
             </Text>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("PoliciesScreen", { item: item })}>
               <Text style={styles.txtBtn}>View more</Text>
             </TouchableOpacity>
           </View>

@@ -405,9 +405,13 @@ export default function SearchResultsScreen({ navigation, route }) {
                 marginRight: 15,
               }}
             >
+            
+              {/* Clear all */}
               <TouchableOpacity onPress={handleClearAll}>
                 <Text style={{ color: "#b1b2b6" }}>Clear all</Text>
               </TouchableOpacity>
+
+              {/* View results */}
               <TouchableOpacity
                 onPress={handleFilter}
                 style={styles.button}
