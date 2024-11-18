@@ -155,25 +155,41 @@ export default function HomeScreen({ navigation, route }) {
       >
       </Modal>
       <View style={styles.footer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
           <Image
             style={styles.menuImg2}
             source={require("../assets/SearchIcon.png")}
           />
           <Text style={styles.footerText}>Search</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>>
+        <TouchableOpacity onPress={() => navigation.navigate('FavoriteScreen')}>
+        <Image
+            style={styles.menuImg2}
+            source={require("../assets/heart.png")}
+          />
           <Text style={styles.footerText}>Favorite</Text>
         </TouchableOpacity>
         <TouchableOpacity>
+        <Image
+            style={styles.menuImg2}
+            source={require("../assets/booking.png")}
+          />
           <Text style={styles.footerText}>Booking</Text>
         </TouchableOpacity>
         <TouchableOpacity>
+        <Image
+            style={styles.menuImg2}
+            source={require("../assets/message.png")}
+          />
           <Text style={styles.footerText}>Inbox</Text>
         </TouchableOpacity>
         <TouchableOpacity
             onPress={() => navigation.navigate('ProfileScreen')}>
-          <Text style={[styles.footerText, styles.activeFooter]}>My Profile</Text>
+              <Image
+            style={styles.menuImg2}
+            source={require("../assets/profile.jpg")}
+          />
+          <Text style={[styles.footerText]}>My Profile</Text>
         </TouchableOpacity>
         
       </View>
@@ -271,6 +287,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     margin: 3,
-    borderRadius: 10,
+    justifyContent:"center",
   },
 });
