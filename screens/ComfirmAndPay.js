@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Children } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,8 +9,11 @@ import {
   StyleSheet,
 } from "react-native";
 import Back from "../assets/left-arrow.png";
+import StartIcon from "../assets/star.png";
 export default function ComfirmAndPay({ route, navigation }) {
-  const { item } = route.params;
+  const { item, startDay, endDay, guests, child } = route.params;
+  const cleaningFee = 5;
+  const serviceFee = 5;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -36,12 +39,29 @@ export default function ComfirmAndPay({ route, navigation }) {
         }}
       >
         <View>
-          <Text>${item.Price}/night</Text>
-          <Text>{item.Name}</Text>
-          <Text>{item.Rate}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-end",
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+              ${item.Place.price}
+            </Text>
+            <Text>/night</Text>
+          </View>
+          <Text>{item.Place.name}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image
+              source={StartIcon}
+              style={{ width: 15, height: 15, marginRight: 5 }}
+            />
+            <Text>{item.Place.rate}</Text>
+          </View>
         </View>
         <View>
-          <Image source={{ uri: `${item.Image}.jpg` }} style={styles.img} />
+          <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />
         </View>
       </View>
       <View style={styles.honrizonLine}></View>
@@ -57,9 +77,11 @@ export default function ComfirmAndPay({ route, navigation }) {
             alignItems: "center",
           }}
         >
-          <View>
-            <Text>Date</Text>
-            <Text>Date1</Text>
+          <View style={{ marginBottom: 15 }}>
+            <Text style={styles.txtBold}>Date</Text>
+            <Text>
+              {startDay} - {endDay}
+            </Text>
           </View>
         </View>
         <View
@@ -70,8 +92,8 @@ export default function ComfirmAndPay({ route, navigation }) {
           }}
         >
           <View>
-            <Text>Guest</Text>
-            <Text>Guest 2</Text>
+            <Text style={styles.txtBold}>Guest</Text>
+            <Text>{guests + child}</Text>
           </View>
         </View>
       </View>
@@ -82,18 +104,30 @@ export default function ComfirmAndPay({ route, navigation }) {
           Payment options
         </Text>
         {/* Pay in full */}
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 15,
+          }}
+        >
           <View>
-            <Text>Pay in full</Text>
-            <Text>Pay in full 2</Text>
+            <Text style={styles.txtBold}>Pay in full</Text>
+            <Text>
+              Pay ${item.Place.price * 1 + cleaningFee + serviceFee} now to
+              finalize your booking
+            </Text>
           </View>
         </View>
         {/* Pay a part now */}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
             <View>
-              <Text>Pay a part now</Text>
-              <Text>Pay a part now 2</Text>
+              <Text style={styles.txtBold}>Pay a part now</Text>
+              <Text>
+                You can make a partial payment now and the remaining amount at a
+                later time
+              </Text>
             </View>
           </View>
         </View>
@@ -105,27 +139,32 @@ export default function ComfirmAndPay({ route, navigation }) {
           Price details
         </Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>${item.Price} x 1 night</Text>
-          <Text>${item.Price * 1}</Text>
+          <Text>${item.Place.price} x 1 night</Text>
+          <Text>${item.Place.price * 1}</Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text>Cleaning fee</Text>
-          <Text>Cleaning fee2</Text>
+          <Text>${cleaningFee}</Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text>Service fee</Text>
-          <Text>Service fee2</Text>
+          <Text>${serviceFee}</Text>
         </View>
         <View style={styles.honrizonLine}></View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text>Total</Text>
-          <Text>Total 2</Text>
+          <Text>${item.Place.price * 1 + cleaningFee + serviceFee}</Text>
         </View>
       </View>
       <View style={{ justifyContent: "flex-end" }}>
         <TouchableOpacity
           style={styles.bookBtn}
-          onPress={() => navigation.navigate("PaymentSuccess", { item: item })}
+          onPress={() =>
+            navigation.navigate("PaymentSuccess", {
+              item: item,
+              total: item.Place.price * 1 + cleaningFee + serviceFee,
+            })
+          }
         >
           <Text style={styles.bookTxt}>Book now</Text>
         </TouchableOpacity>
@@ -169,5 +208,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginLeft: 25,
     marginRight: 25,
+  },
+  txtBold: {
+    fontWeight: "bold",
   },
 });

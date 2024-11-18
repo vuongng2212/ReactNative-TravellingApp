@@ -47,7 +47,8 @@ export default function FacilitiesANDServiceScreen({ route, navigation }) {
         <View style={{ marginLeft: 10 }}>
           <View>
             <Text style={styles.facilitiesTxt}>
-              {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms {item.Room.beds.quantity } Beds {item.Room.bathrooms.quantity} Bath
+              {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms{" "}
+              {item.Room.beds.quantity} Beds {item.Room.bathrooms.quantity} Bath
             </Text>
           </View>
 

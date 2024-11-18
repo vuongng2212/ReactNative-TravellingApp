@@ -1,12 +1,32 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+} from "react-native";
 
-const PropertyList = ({ data, navigation }) => {
+const PropertyList = ({
+  data,
+  navigation,
+  startDay,
+  endDay,
+  guests,
+  child,
+}) => {
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("PropertyDetailScreen", { item: item });
+          navigation.navigate("PropertyDetailScreen", {
+            item: item,
+            startDay: startDay,
+            endDay: endDay,
+            guests: guests,
+            child: child,
+          });
         }}
       >
         <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />

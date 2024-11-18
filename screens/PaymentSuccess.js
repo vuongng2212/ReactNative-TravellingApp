@@ -14,11 +14,11 @@ import {
 import SuccessIcon from "../assets/PaymentSuccess.png";
 import DownloadPDF from "../assets/DownloadPDF.png";
 export default function PaymentSuccess({ route, navigation }) {
-  const { item } = route.params;
+  const { item, total } = route.params;
 
   const [formattedDate, setFormattedDate] = useState("");
   const [formattedTime, setFormattedTime] = useState("");
-
+  const [refNumber, setRefNumber] = useState("");
   useEffect(() => {
     const date = new Date();
     const day = String(date.getDate()).padStart(2, "0");
@@ -31,6 +31,7 @@ export default function PaymentSuccess({ route, navigation }) {
     const ampm = hours >= 12 ? "PM" : "AM";
     const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM/PM
     setFormattedTime(`${formattedHours}:${minutes} ${ampm}`);
+    setRefNumber(`${day}${month}${year}${hours}${minutes}`);
   }, []);
 
   return (
@@ -68,7 +69,7 @@ export default function PaymentSuccess({ route, navigation }) {
             }}
           >
             <Text style={styles.txtLeft}>Ref number</Text>
-            <Text style={styles.txtRight}>1234567890</Text>
+            <Text style={styles.txtRight}>{refNumber}</Text>
           </View>
           <View
             style={{
@@ -111,7 +112,7 @@ export default function PaymentSuccess({ route, navigation }) {
             }}
           >
             <Text style={styles.txtLeft}>Amount</Text>
-            <Text style={styles.txtRight}>${item.Price}</Text>
+            <Text style={styles.txtRight}>${total}</Text>
           </View>
           <TouchableOpacity style={styles.btn}>
             <Image source={DownloadPDF} style={{ width: 20, height: 20 }} />

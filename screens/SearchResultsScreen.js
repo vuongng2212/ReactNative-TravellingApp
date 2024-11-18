@@ -19,12 +19,17 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 // Image
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
-import PropertyList from '../components/SearchResultsScreen-PropertyList';
+import PropertyList from "../components/SearchResultsScreen-PropertyList";
 
 export default function SearchResultsScreen({ navigation, route }) {
   let searchParams = "Anywhere";
-  if(route.params!==undefined){
-    const { location, startDay, endDay, adultGuest, childGuest } = route.params;
+  let location = "Anywhere";
+  let startDay = null;
+  let endDay = null;
+  let adultGuest = 0;
+  let childGuest = 0;
+  if (route.params !== undefined) {
+    ({ location, startDay, endDay, adultGuest, childGuest } = route.params);
     searchParams = `${location}, ${startDay}, ${endDay}, ${adultGuest}, ${childGuest}`;
   }
   // Fetch data
@@ -44,9 +49,9 @@ export default function SearchResultsScreen({ navigation, route }) {
   // Model
   const [isModalVisible, setModalVisible] = useState(false);
   // Thêm states cho Rooms and beds
-  const [bedrooms, setBedrooms] = useState('');
-  const [beds, setBeds] = useState('');
-  const [bathrooms, setBathrooms] = useState('');
+  const [bedrooms, setBedrooms] = useState("");
+  const [beds, setBeds] = useState("");
+  const [bathrooms, setBathrooms] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
@@ -62,7 +67,7 @@ export default function SearchResultsScreen({ navigation, route }) {
     fetchData();
   }, []);
   const handleFilter = () => {
-    const filtered = data.filter(item => {
+    const filtered = data.filter((item) => {
       // Lọc theo giá
       if (item.Place.price < range[0] || item.Place.price > range[1]) {
         return false;
@@ -72,7 +77,8 @@ export default function SearchResultsScreen({ navigation, route }) {
       if (checkedEntire || checkedPrivate || checkedDormitories) {
         if (checkedEntire && item.TypeOfPlace !== "Entire") return false;
         if (checkedPrivate && item.TypeOfPlace !== "Private") return false;
-        if (checkedDormitories && item.TypeOfPlace !== "Dormitories") return false;
+        if (checkedDormitories && item.TypeOfPlace !== "Dormitories")
+          return false;
       }
 
       // Lọc theo tiện nghi
@@ -103,9 +109,9 @@ export default function SearchResultsScreen({ navigation, route }) {
     setCheckedGym(false);
     setCheckedOutdoor(false);
     setCheckedInternet(false);
-    setBedrooms('');
-    setBeds('');
-    setBathrooms('');
+    setBedrooms("");
+    setBeds("");
+    setBathrooms("");
     setFilteredData([]);
   };
 
@@ -120,9 +126,7 @@ export default function SearchResultsScreen({ navigation, route }) {
         <TextInput
           placeholder={searchParams}
           style={styles.txtInput}
-          onPress={() => {
-            console.log(searchParams)
-          }}
+          onPress={() => {}}
         />
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image source={AdjustIcon} style={styles.adjust} />
@@ -151,11 +155,15 @@ export default function SearchResultsScreen({ navigation, route }) {
         </View>
       </View>
       {/* Flat list */}
-      <PropertyList 
-        data={filteredData.length > 0 ? filteredData : data} 
-        navigation={navigation} 
+      <PropertyList
+        data={filteredData.length > 0 ? filteredData : data}
+        navigation={navigation}
+        startDay={startDay}
+        endDay={endDay}
+        guests={adultGuest}
+        child={childGuest}
       />
-      {/* Modal */}   
+      {/* Modal */}
       <Modal
         transparent={true}
         visible={isModalVisible}
@@ -324,8 +332,8 @@ export default function SearchResultsScreen({ navigation, route }) {
                   keyboardType="numeric"
                 />
                 <View style={styles.horizontaModellLine}></View>
-                <TextInput 
-                  placeholder="Beds" 
+                <TextInput
+                  placeholder="Beds"
                   style={styles.txtRoomandBed}
                   value={beds}
                   onChangeText={setBeds}
@@ -405,17 +413,13 @@ export default function SearchResultsScreen({ navigation, route }) {
                 marginRight: 15,
               }}
             >
-            
               {/* Clear all */}
               <TouchableOpacity onPress={handleClearAll}>
                 <Text style={{ color: "#b1b2b6" }}>Clear all</Text>
               </TouchableOpacity>
 
               {/* View results */}
-              <TouchableOpacity
-                onPress={handleFilter}
-                style={styles.button}
-              >
+              <TouchableOpacity onPress={handleFilter} style={styles.button}>
                 <Text style={styles.buttonText}>View Results</Text>
               </TouchableOpacity>
             </View>

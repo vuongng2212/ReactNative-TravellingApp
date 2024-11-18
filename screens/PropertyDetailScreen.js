@@ -10,7 +10,7 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from "react-native-maps";
 
 import backIcon from "../assets/backIcon.png";
 import locationIcon from "../assets/location.png";
@@ -24,7 +24,7 @@ import Outdoor from "../assets/Outdoor.png";
 import Clock from "../assets/Clock.png";
 
 export default function PropertyDetailScreen({ route, navigation }) {
-  const { item } = route.params;
+  const { item, startDay, endDay, guests, child } = route.params;
 
   const limitWords = (text, limit) => {
     const words = text.split(" ");
@@ -37,7 +37,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
   const openMap = (item) => {
     const latitude = parseFloat(item.Cord.latitude);
     const longitude = parseFloat(item.Cord.longitude);
-    navigation.navigate('MapScreen', {
+    navigation.navigate("MapScreen", {
       item: item,
       latitude: latitude,
       longitude: longitude,
@@ -125,11 +125,13 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
             <View>
               <Text style={styles.facilitiesTxt}>
-                {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms {item.Room.beds.quantity } Beds {item.Room.bathrooms.quantity} Bath
+                {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms{" "}
+                {item.Room.beds.quantity} Beds {item.Room.bathrooms.quantity}{" "}
+                Bath
               </Text>
             </View>
 
-            {item.Facilities.internet && (  
+            {item.Facilities.internet && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Internet} style={styles.facilitiesImg} />
@@ -195,7 +197,9 @@ export default function PropertyDetailScreen({ route, navigation }) {
                   margin: 10,
                   alignItems: "center",
                 }}
-                onPress={() => navigation.navigate("ReviewScreen", { id: item.id })}
+                onPress={() =>
+                  navigation.navigate("ReviewScreen", { id: item.id })
+                }
               >
                 <Text style={{ color: "#5a5b5d" }}>See all </Text>
                 <Image source={next} style={{ width: 10, height: 10 }} />
@@ -227,7 +231,11 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 <Text style={{ fontWeight: "bold" }}>House rules</Text>
                 <View style={styles.ruleInOut}>
                   <Image source={Clock} style={{ width: 15, height: 15 }} />
-                  <Text> Check in time: {item.Policies.checkIn.from} - {item.Policies.checkIn.to}</Text>
+                  <Text>
+                    {" "}
+                    Check in time: {item.Policies.checkIn.from} -{" "}
+                    {item.Policies.checkIn.to}
+                  </Text>
                 </View>
                 <View style={styles.ruleInOut}>
                   <Image source={Clock} style={{ width: 15, height: 15 }} />
@@ -247,10 +255,13 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 Checkin policies
               </Text>
             </View>
-            <Text>
-              View more to see policy information.
-            </Text>
-            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("PoliciesScreen", { item: item })}>
+            <Text>View more to see policy information.</Text>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() =>
+                navigation.navigate("PoliciesScreen", { item: item })
+              }
+            >
               <Text style={styles.txtBtn}>View more</Text>
             </TouchableOpacity>
           </View>
@@ -265,7 +276,9 @@ export default function PropertyDetailScreen({ route, navigation }) {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}>
+            <Text
+              style={{ fontSize: 18, fontWeight: "bold", marginBottom: 15 }}
+            >
               Description
             </Text>
           </View>
@@ -304,7 +317,13 @@ export default function PropertyDetailScreen({ route, navigation }) {
             <TouchableOpacity
               style={styles.bookBtn}
               onPress={() =>
-                navigation.navigate("ComfirmAndPay", { item: item })
+                navigation.navigate("ComfirmAndPay", {
+                  item: item,
+                  startDay: startDay,
+                  endDay: endDay,
+                  guests: guests,
+                  child: child,
+                })
               }
             >
               <Text style={styles.bookTxt}>Book now</Text>
