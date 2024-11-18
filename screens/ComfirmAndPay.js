@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Children } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -8,12 +8,17 @@ import {
   StatusBar,
   StyleSheet,
 } from "react-native";
+import { Checkbox } from "react-native-paper";
 import Back from "../assets/left-arrow.png";
 import StartIcon from "../assets/star.png";
+import EditIcon from "../assets/edit.png";
 export default function ComfirmAndPay({ route, navigation }) {
   const { item, startDay, endDay, guests, child } = route.params;
   const cleaningFee = 5;
   const serviceFee = 5;
+  const [checkedPayInFull, setCheckedPayInFull] = useState(false);
+  const [checkedPayPart, setCheckedPayPart] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("Pay in full");
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -83,6 +88,9 @@ export default function ComfirmAndPay({ route, navigation }) {
               {startDay} - {endDay}
             </Text>
           </View>
+          <TouchableOpacity>
+            <Image source={EditIcon} style={{ width: 20, height: 20 }} />
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -95,6 +103,9 @@ export default function ComfirmAndPay({ route, navigation }) {
             <Text style={styles.txtBold}>Guest</Text>
             <Text>{guests + child}</Text>
           </View>
+          <TouchableOpacity>
+            <Image source={EditIcon} style={{ width: 20, height: 20 }} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.honrizonLine}></View>
@@ -118,10 +129,18 @@ export default function ComfirmAndPay({ route, navigation }) {
               finalize your booking
             </Text>
           </View>
+          <Checkbox
+            status={paymentMethod === "Pay in full" ? "checked" : "unchecked"}
+            onPress={() => {
+              setPaymentMethod("Pay in full");
+              setCheckedPayInFull(!checkedPayInFull);
+            }}
+            color="#0394ae"
+          />
         </View>
         {/* Pay a part now */}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View>
+          <View style={{ width: "80%" }}>
             <View>
               <Text style={styles.txtBold}>Pay a part now</Text>
               <Text>
@@ -130,6 +149,14 @@ export default function ComfirmAndPay({ route, navigation }) {
               </Text>
             </View>
           </View>
+          <Checkbox
+            status={paymentMethod === "Pay a part" ? "checked" : "unchecked"}
+            onPress={() => {
+              setPaymentMethod("Pay a part");
+              setCheckedPayPart(!checkedPayPart);
+            }}
+            color="#0394ae"
+          />
         </View>
       </View>
       <View style={styles.honrizonLine}></View>
@@ -163,6 +190,7 @@ export default function ComfirmAndPay({ route, navigation }) {
             navigation.navigate("PaymentSuccess", {
               item: item,
               total: item.Place.price * 1 + cleaningFee + serviceFee,
+              paymentMethod: paymentMethod,
             })
           }
         >

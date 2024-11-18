@@ -14,7 +14,7 @@ import {
 import SuccessIcon from "../assets/PaymentSuccess.png";
 import DownloadPDF from "../assets/DownloadPDF.png";
 export default function PaymentSuccess({ route, navigation }) {
-  const { item, total } = route.params;
+  const { item, total, paymentMethod } = route.params;
 
   const [formattedDate, setFormattedDate] = useState("");
   const [formattedTime, setFormattedTime] = useState("");
@@ -100,7 +100,7 @@ export default function PaymentSuccess({ route, navigation }) {
             }}
           >
             <Text style={styles.txtLeft}>Payment method</Text>
-            <Text style={styles.txtRight}>1234567890</Text>
+            <Text style={styles.txtRight}>{paymentMethod}</Text>
           </View>
           <View style={styles.honrizonLine}></View>
           <View
