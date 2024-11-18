@@ -16,6 +16,7 @@ import DateSelection from "./screens/DateSelectionScreen";
 import GuestSelcetion from "./screens/GuestSelectionScreen";
 import MapScreen from "./components/PropertyDetailScreen-MapScreen";
 import PoliciesScreen from "./screens/PoliciesScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -95,6 +96,11 @@ export default function App() {
         <Stack.Screen
           name="PoliciesScreen"
           component={PoliciesScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}
