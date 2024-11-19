@@ -1,7 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import PropertyList from "../components/SearchResultsScreen-PropertyList";
 
 const FavoriteScreen = ({ navigation, route }) => {
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const userId = "3hzoxYV7m5nlV6e4vEKH";
+        const userRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userRef);
+        const userFavorites = userDoc.data()?.Favourite || [];
+
+        console.log("Loaded favorites:", userFavorites);
+        setFavorites(userFavorites);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error loading favorites:", error);
+        setLoading(false);
+      }
+    };
+
+    loadFavorites();
+  }, []);
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <View style={styles.content}>
+          <Text>Đang tải...</Text>
+        </View>
+      );
+    }
+
+    if (favorites.length === 0) {
+      return (
+        <View style={styles.content}>
+          <Image
+            source={{ uri: "https://example.com/saved-placeholder.jpg" }}
+            style={styles.image}
+          />
+          <Text style={styles.title}>Lưu chỗ nghỉ bạn thích</Text>
+          <Text style={styles.subtitle}>
+            Tạo danh sách các chỗ nghỉ yêu thích để chia sẻ, so sánh và đặt
+            phòng.
+          </Text>
+          <TouchableOpacity
+            style={styles.searchButton}
+            onPress={() => navigation.navigate("HomeScreen")}
+          >
+            <Text style={styles.searchButtonText}>Bắt đầu tìm kiếm</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    // Chuyển đổi dữ liệu favorite để phù hợp với PropertyList
+    const formattedFavorites = favorites.map((fav) => ({
+      id: fav.placeId,
+      Place: {
+        id: fav.placeId,
+        name: fav.placeName,
+        rate: fav.placeRate,
+        price: fav.placePrice,
+        img: fav.placeImg,
+        guest: fav.guests,
+      },
+      Room: {
+        bedrooms: {
+          quantity: fav.bedroomsQuantity,
+        },
+      },
+    }));
+
+    return (
+      <View style={styles.favoriteList}>
+        <PropertyList
+          data={formattedFavorites}
+          navigation={navigation}
+          startDay={null}
+          endDay={null}
+          guests={0}
+          child={0}
+        />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -15,22 +104,9 @@ const FavoriteScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.content}>
-        <Image
-          source={{ uri: "https://example.com/saved-placeholder.jpg" }} // Replace with actual image URL
-          style={styles.image}
-        />
-        <Text style={styles.title}>Lưu chỗ nghỉ bạn thích</Text>
-        <Text style={styles.subtitle}>
-          Tạo danh sách các chỗ nghỉ yêu thích để chia sẻ, so sánh và đặt phòng.
-        </Text>
-        <TouchableOpacity style={styles.searchButton}>
-          <Text style={styles.searchButtonText}>Bắt đầu tìm kiếm</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.createListText}>Tạo một danh sách</Text>
-        </TouchableOpacity>
-      </View>
+
+      {renderContent()}
+
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => navigation.navigate("SearchScreen")}>
           <Image
@@ -161,6 +237,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#ccc",
     backgroundColor: "#fff",
+  },
+  favoriteList: {
+    flex: 1,
+    paddingHorizontal: 10,
   },
 });
 

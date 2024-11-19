@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 import backIcon from "../assets/backIcon.png";
 import locationIcon from "../assets/location.png";
@@ -24,7 +28,46 @@ import Outdoor from "../assets/Outdoor.png";
 import Clock from "../assets/Clock.png";
 
 export default function PropertyDetailScreen({ route, navigation }) {
-  const { item, startDay, endDay, guests, child } = route.params;
+  const { placeId, startDay, endDay, guests, child } = route.params;
+  const [placeData, setPlaceData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPlaceData = async () => {
+      try {
+        const placeRef = doc(db, "Place", placeId);
+        const placeDoc = await getDoc(placeRef);
+
+        if (placeDoc.exists()) {
+          setPlaceData(placeDoc.data());
+        } else {
+          // Xử lý trường hợp không tìm thấy dữ liệu
+          Alert.alert("Lỗi", "Không tìm thấy thông tin địa điểm");
+          navigation.goBack();
+        }
+      } catch (error) {
+        console.error("Error fetching place data:", error);
+        Alert.alert("Lỗi", "Không thể tải thông tin địa điểm");
+        navigation.goBack();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaceData();
+  }, [placeId]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0066CC" />
+      </View>
+    );
+  }
+
+  if (!placeData) {
+    return null;
+  }
 
   const limitWords = (text, limit) => {
     const words = text.split(" ");
@@ -48,7 +91,10 @@ export default function PropertyDetailScreen({ route, navigation }) {
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <ScrollView>
         <View>
-          <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />
+          <Image
+            source={{ uri: `${placeData.Place.img}.jpg` }}
+            style={styles.img}
+          />
 
           <TouchableOpacity
             style={styles.overlayIMG}
@@ -59,7 +105,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
         </View>
         <View style={styles.container}>
           {/* Name and Address */}
-          <Text style={styles.txtName}>{item.Place.txtName}</Text>
+          <Text style={styles.txtName}>{placeData.Place.txtName}</Text>
           <View
             style={{
               flexDirection: "row",
@@ -74,12 +120,12 @@ export default function PropertyDetailScreen({ route, navigation }) {
                 width: "100%",
               }}
             >
-              <Text style={{ width: "70%" }}>{item.Address.adr}</Text>
+              <Text style={{ width: "70%" }}>{placeData.Address.adr}</Text>
               <TouchableOpacity
                 style={{
                   width: "30%",
                 }}
-                onPress={() => openMap(item)}
+                onPress={() => openMap(placeData)}
               >
                 <Text
                   style={{
@@ -100,12 +146,12 @@ export default function PropertyDetailScreen({ route, navigation }) {
               style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
             >
               <Image source={star} style={{ width: 15, height: 15 }} />
-              <Text> {item.Place.rate}/5</Text>
+              <Text> {placeData.Place.rate}/5</Text>
             </View>
             <TouchableOpacity
               style={{ flexDirection: "row", margin: 10, alignItems: "center" }}
               onPress={() =>
-                navigation.navigate("ReviewScreen", { id: item.id })
+                navigation.navigate("ReviewScreen", { id: placeData.id })
               }
             >
               <Text style={{ color: "#5a5b5d" }}> reviews </Text>
@@ -125,13 +171,14 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
             <View>
               <Text style={styles.facilitiesTxt}>
-                {item.Place.guest} Guests {item.Room.bedrooms.quantity} Bedrooms{" "}
-                {item.Room.beds.quantity} Beds {item.Room.bathrooms.quantity}{" "}
-                Bath
+                {placeData.Place.guest} Guests{" "}
+                {placeData.Room.bedrooms.quantity} Bedrooms{" "}
+                {placeData.Room.beds.quantity} Beds{" "}
+                {placeData.Room.bathrooms.quantity} Bath
               </Text>
             </View>
 
-            {item.Facilities.internet && (
+            {placeData.Facilities.internet && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Internet} style={styles.facilitiesImg} />
@@ -140,7 +187,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
               </View>
             )}
 
-            {item.Facilities.kitchen && (
+            {placeData.Facilities.kitchen && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Kitchen} style={styles.facilitiesImg} />
@@ -149,7 +196,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
               </View>
             )}
 
-            {item.Facilities.pool && (
+            {placeData.Facilities.pool && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Pool} style={styles.facilitiesImg} />
@@ -158,7 +205,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
               </View>
             )}
 
-            {item.Facilities.outdoor && (
+            {placeData.Facilities.outdoor && (
               <View>
                 <View style={styles.facilitiesItem}>
                   <Image source={Outdoor} style={styles.facilitiesImg} />
@@ -171,7 +218,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
               style={styles.btn}
               onPress={() =>
                 navigation.navigate("FacilitiesANDServiceScreen", {
-                  item: item,
+                  item: placeData,
                 })
               }
             >
@@ -198,7 +245,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
                   alignItems: "center",
                 }}
                 onPress={() =>
-                  navigation.navigate("ReviewScreen", { id: item.id })
+                  navigation.navigate("ReviewScreen", { id: placeData.id })
                 }
               >
                 <Text style={{ color: "#5a5b5d" }}>See all </Text>
@@ -207,7 +254,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
             </View>
             <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
               <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-                {item.Place.rate}
+                {placeData.Place.rate}
               </Text>
               <Text>/5</Text>
             </View>
@@ -233,13 +280,16 @@ export default function PropertyDetailScreen({ route, navigation }) {
                   <Image source={Clock} style={{ width: 15, height: 15 }} />
                   <Text>
                     {" "}
-                    Check in time: {item.Policies.checkIn.from} -{" "}
-                    {item.Policies.checkIn.to}
+                    Check in time: {placeData.Policies.checkIn.from} -{" "}
+                    {placeData.Policies.checkIn.to}
                   </Text>
                 </View>
                 <View style={styles.ruleInOut}>
                   <Image source={Clock} style={{ width: 15, height: 15 }} />
-                  <Text> Check out time before {item.Policies.checkOut}</Text>
+                  <Text>
+                    {" "}
+                    Check out time before {placeData.Policies.checkOut}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -259,7 +309,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
             <TouchableOpacity
               style={styles.btn}
               onPress={() =>
-                navigation.navigate("PoliciesScreen", { item: item })
+                navigation.navigate("PoliciesScreen", { item: placeData })
               }
             >
               <Text style={styles.txtBtn}>View more</Text>
@@ -284,17 +334,17 @@ export default function PropertyDetailScreen({ route, navigation }) {
           </View>
           <View>
             <Image
-              source={{ uri: `${item.Place.img}.jpg` }}
+              source={{ uri: `${placeData.Place.img}.jpg` }}
               style={styles.DescriptionImg}
             />
             <Text style={styles.DescriptionTxt}>
-              {limitWords(item.Place.description, 25)}
+              {limitWords(placeData.Place.description, 25)}
             </Text>
           </View>
           <TouchableOpacity
             style={styles.btn}
             onPress={() =>
-              navigation.navigate("DescriptionScreen", { item: item })
+              navigation.navigate("DescriptionScreen", { item: placeData })
             }
           >
             <Text style={styles.txtBtn}>View more</Text>
@@ -311,14 +361,16 @@ export default function PropertyDetailScreen({ route, navigation }) {
           >
             <View style={{ flexDirection: "row" }}>
               <Text>From: </Text>
-              <Text style={{ fontWeight: "bold" }}>${item.Place.price}</Text>
+              <Text style={{ fontWeight: "bold" }}>
+                ${placeData.Place.price}
+              </Text>
               <Text>/night</Text>
             </View>
             <TouchableOpacity
               style={styles.bookBtn}
               onPress={() =>
                 navigation.navigate("ComfirmAndPay", {
-                  item: item,
+                  item: placeData,
                   startDay: startDay,
                   endDay: endDay,
                   guests: guests,
@@ -427,5 +479,10 @@ const styles = StyleSheet.create({
   DescriptionTxt: {
     marginTop: 10,
     color: "#6f7072",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

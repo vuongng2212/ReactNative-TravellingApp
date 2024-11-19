@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,16 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
+import HeartIcon from "../assets/heart.png";
+import HeartIconFilled from "../assets/red-heart.png";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+} from "firebase/firestore";
+import { db, auth } from "../firebaseConfig";
 
 const PropertyList = ({
   data,
@@ -16,31 +26,122 @@ const PropertyList = ({
   guests,
   child,
 }) => {
-  const renderItem = ({ item }) => (
-    <View>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("PropertyDetailScreen", {
-            item: item,
-            startDay: startDay,
-            endDay: endDay,
-            guests: guests,
-            child: child,
-          });
-        }}
-      >
-        <Image source={{ uri: `${item.Place.img}.jpg` }} style={styles.img} />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.txtRoom}>{item.Place.name}</Text>
-          <Text style={{ marginTop: 10 }}>{item.Place.rate}</Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>{item.Room.bedrooms.quantity}</Text>
-          <Text>${item.Place.price}/night</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
+  const [favorites, setFavorites] = useState({});
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const userId = "3hzoxYV7m5nlV6e4vEKH";
+        if (!userId) return;
+
+        const userRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userRef);
+        const userFavorites = userDoc.data()?.Favourite || [];
+
+        const favoritesObj = {};
+        userFavorites.forEach((fav) => {
+          favoritesObj[fav.placeId] = true;
+        });
+
+        setFavorites(favoritesObj);
+      } catch (error) {
+        console.error("Error loading favorites:", error);
+      }
+    };
+
+    loadFavorites();
+  }, []);
+
+  const toggleFavorite = async (item) => {
+    try {
+      const userId = "3hzoxYV7m5nlV6e4vEKH";
+      if (!userId) {
+        console.log("User not logged in");
+        return;
+      }
+
+      const userRef = doc(db, "users", userId);
+      const userDoc = await getDoc(userRef);
+
+      const favoritePlace = {
+        placeId: item.id || "",
+        placeName: item.Place?.name || "",
+        placeImg: item.Place?.img || "",
+        placeRate: item.Place?.rate || 0,
+        placePrice: item.Place?.price || 0,
+        guests: item.Place?.guest || 1,
+        bedroomsQuantity: item.Room?.bedrooms?.quantity || "",
+      };
+
+      if (!favorites[item.id]) {
+        await updateDoc(userRef, {
+          Favourite: arrayUnion(favoritePlace),
+        });
+      } else {
+        await updateDoc(userRef, {
+          Favourite: arrayRemove(favoritePlace),
+        });
+      }
+
+      setFavorites((prev) => ({
+        ...prev,
+        [item.id]: !prev[item.id],
+      }));
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+      console.log("Error details:", error.message);
+      console.log("Item causing error:", item);
+    }
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("PropertyDetailScreen", {
+              placeId: item.id,
+              startDay: startDay,
+              endDay: endDay,
+              guests: guests,
+              child: child,
+            });
+          }}
+        >
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: `${item.Place.img}.jpg` }}
+              style={styles.img}
+            />
+            <TouchableOpacity
+              style={styles.heartButton}
+              onPress={() => toggleFavorite(item)}
+            >
+              <Image
+                source={favorites[item.id] ? HeartIconFilled : HeartIcon}
+                style={[
+                  styles.heartIcon,
+                  favorites[item.id] && styles.heartIconFilled,
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={styles.txtRoom}>{item.Place.name}</Text>
+            <Text style={{ marginTop: 10 }}>{item.Place.rate}</Text>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text>{item.Room.bedrooms.quantity} bedroom</Text>
+            <Text>${item.Place.price}/night</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <FlatList
@@ -62,6 +163,32 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginTop: 10,
+  },
+  imageContainer: {
+    position: "relative",
+  },
+  heartButton: {
+    position: "absolute",
+    top: 30, // Điều chỉnh vị trí từ top
+    right: 10, // Điều chỉnh vị trí từ right
+    backgroundColor: "white",
+    padding: 8,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  heartIcon: {
+    width: 24,
+    height: 24,
+  },
+  heartIconFilled: {
+    tintColor: "red",
   },
 });
 
