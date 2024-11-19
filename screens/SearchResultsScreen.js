@@ -20,6 +20,8 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import SearchIcon from "../assets/SearchIcon.png";
 import AdjustIcon from "../assets/AdjustIcon.png";
 import PropertyList from "../components/SearchResultsScreen-PropertyList";
+import MenuFooter from "../components/MenuFooter";
+
 
 export default function SearchResultsScreen({ navigation, route }) {
   let searchParams = "Anywhere";
@@ -426,6 +428,8 @@ export default function SearchResultsScreen({ navigation, route }) {
           </View>
         </View>
       </Modal>
+      {/* Footer */}
+      <MenuFooter navigation={navigation} />
     </SafeAreaView>
   );
 }

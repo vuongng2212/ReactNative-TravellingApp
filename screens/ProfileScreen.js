@@ -7,8 +7,10 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import MenuFooter from "../components/MenuFooter";
 
-const ProfileScreen = () => {
+
+export default function ProfileScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -43,28 +45,11 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Footer Navigation */}
-      <View style={styles.footer}>
-        <TouchableOpacity>
-          <Text style={styles.footerText}>Search</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.footerText}>Favorite</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.footerText}>Booking</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.footerText}>Inbox</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={[styles.footerText, styles.activeFooter]}>My Profile</Text>
-        </TouchableOpacity>
-        
-      </View>
+      {/* Footer */}
+      <MenuFooter navigation={navigation} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -128,4 +113,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
