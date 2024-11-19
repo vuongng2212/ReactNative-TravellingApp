@@ -13,12 +13,52 @@ import {
 } from "react-native";
 import SuccessIcon from "../assets/PaymentSuccess.png";
 import DownloadPDF from "../assets/DownloadPDF.png";
+import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+
 export default function PaymentSuccess({ route, navigation }) {
   const { item, total, paymentMethod } = route.params;
 
   const [formattedDate, setFormattedDate] = useState("");
   const [formattedTime, setFormattedTime] = useState("");
   const [refNumber, setRefNumber] = useState("");
+
+  const saveBooking = async () => {
+    try {
+      const testUserID = "3hzoxYV7m5nlV6e4vEKH";
+      const userRef = doc(db, "users", testUserID);
+      const bookingData = {
+        payID: refNumber || "",
+        placeName: item?.Place?.name || "",
+        placeImg: item?.Place?.img || "",
+        placeRate: item?.Place?.rate || 0,
+        totalPrice: total || 0,
+
+        paymentMethod: paymentMethod || "",
+      };
+
+      // Kiểm tra object đã tạo
+      console.log("BookingData:", bookingData);
+
+      const userDoc = await getDoc(userRef);
+      const userData = userDoc.data();
+
+      if (!userData?.Booking) {
+        await updateDoc(userRef, {
+          Booking: [bookingData],
+        });
+      } else {
+        await updateDoc(userRef, {
+          Booking: arrayUnion(bookingData),
+        });
+      }
+    } catch (error) {
+      console.error("Lỗi khi lưu vào Booking:", error);
+      console.log("Error details:", error.message);
+      console.log("Error code:", error.code);
+    }
+  };
+
   useEffect(() => {
     const date = new Date();
     const day = String(date.getDate()).padStart(2, "0");
@@ -29,10 +69,20 @@ export default function PaymentSuccess({ route, navigation }) {
     const hours = date.getHours();
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const ampm = hours >= 12 ? "PM" : "AM";
-    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM/PM
+    const formattedHours = hours % 12 || 12;
     setFormattedTime(`${formattedHours}:${minutes} ${ampm}`);
-    setRefNumber(`${day}${month}${year}${hours}${minutes}`);
+    const milliseconds = date.getMilliseconds();
+    const newRefNumber = `${day}${month}${year}${hours}${minutes}${milliseconds}`;
+    setRefNumber(newRefNumber);
   }, []);
+
+  // Tạo useEffect mới để theo dõi refNumber
+  useEffect(() => {
+    if (refNumber) {
+      // Chỉ gọi saveBooking khi refNumber có giá trị
+      saveBooking();
+    }
+  }, [refNumber]);
 
   return (
     <SafeAreaView style={styles.container}>

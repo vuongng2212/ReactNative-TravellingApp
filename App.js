@@ -18,6 +18,7 @@ import MapScreen from "./components/PropertyDetailScreen-MapScreen";
 import PoliciesScreen from "./screens/PoliciesScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
+import BookingScreen from "./screens/BookingScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -107,6 +108,11 @@ export default function App() {
         <Stack.Screen
           name="FavoriteScreen"
           component={FavoriteScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="BookingScreen"
+          component={BookingScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}
