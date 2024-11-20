@@ -19,12 +19,13 @@ import PoliciesScreen from "./screens/PoliciesScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
 import BookingScreen from "./screens/BookingScreen";
+import SigninScreen from "./screens/SigninScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Navigator initialRouteName="SignupScreen">
         <Stack.Screen
           name="LaunchScreen"
           component={LaunchScreen}
@@ -113,6 +114,11 @@ export default function App() {
         <Stack.Screen
           name="BookingScreen"
           component={BookingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SigninScreen"
+          component={SigninScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}

@@ -2,22 +2,27 @@
 import { Link } from '@react-navigation/native';
 import { Text, View, TextInput, Button, Image, StyleSheet, Linking } from 'react-native';
 
-export default function SignupScreen({navigation}) {
+export default function SignginScreen({navigation}) {
   const handleLink = (url) => {
     Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.paragraph}>Sign up</Text>
+      <Text style={styles.paragraph}>Sign in</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your mobile number"
+        placeholder="Enter your mobile number / email"
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your password"
         keyboardType="phone-pad"
       />
       {/* Change HomeScreen to SearchScreen */}
       <View style={styles.buttonContainer}>
-        <Button title="Sign up" onPress={() => navigation.navigate('HomeScreen')} />
+        <Button title="Sign in" onPress={() => navigation.navigate('HomeScreen')} />
       </View>
       <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
@@ -35,9 +40,9 @@ export default function SignupScreen({navigation}) {
         </View>
       </View>
       <Text style={styles.paragraph}>
-        Already have an account?{' '}
-        <Text style={styles.linkText} onPress={() => navigation.navigate('SigninScreen')}>
-          Sign in
+        Don't have an account?{' '}
+        <Text style={styles.linkText} onPress={() => navigation.navigate('SignupScreen')}>
+          Sign up
         </Text>
       </Text>
     </View>
