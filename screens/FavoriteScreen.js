@@ -95,7 +95,7 @@ const FavoriteScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Đã lưu</Text>
+        <Text style={styles.headerTitle}>Favorite</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <Text style={styles.chatIcon}>💬</Text>

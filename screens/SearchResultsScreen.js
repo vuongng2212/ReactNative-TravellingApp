@@ -22,7 +22,6 @@ import AdjustIcon from "../assets/AdjustIcon.png";
 import PropertyList from "../components/SearchResultsScreen-PropertyList";
 import MenuFooter from "../components/MenuFooter";
 
-
 export default function SearchResultsScreen({ navigation, route }) {
   let searchParams = "Anywhere";
   let location = "Anywhere";
@@ -63,14 +62,30 @@ export default function SearchResultsScreen({ navigation, route }) {
         id: doc.id,
         ...doc.data(),
       }));
-      setData(fetchedData);
+
+      let filteredResults = fetchedData;
+
+      if (location && location !== "Anywhere") {
+        filteredResults = filteredResults.filter(
+          (item) =>
+            item.Address?.continent?.toLowerCase() === location.toLowerCase()
+        );
+      }
+
+      const totalGuests = adultGuest + childGuest;
+      if (totalGuests > 0) {
+        filteredResults = filteredResults.filter(
+          (item) => item.Place?.guest >= totalGuests
+        );
+      }
+
+      setData(filteredResults);
     };
 
     fetchData();
-  }, []);
+  }, [location, adultGuest, childGuest]);
   const handleFilter = () => {
     const filtered = data.filter((item) => {
-      // Lọc theo giá
       if (item.Place.price < range[0] || item.Place.price > range[1]) {
         return false;
       }
