@@ -13,6 +13,7 @@ import Back from "../assets/left-arrow.png";
 import { db } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import star from "../assets/star.png";
+import MenuFooter from "../components/MenuFooter";
 
 export default function BookingScreen({ navigation }) {
   const [bookings, setBookings] = useState([]);
@@ -64,31 +65,34 @@ export default function BookingScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <View style={styles.contentContainer}>
+        {/* Booking title */}
+        <View style={styles.title}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={Back} style={{ width: 20, height: 20 }} />
+          </TouchableOpacity>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>Booking</Text>
+          <Text></Text>
+        </View>
 
-      {/* Booking title */}
-      <View style={styles.title}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={Back} style={{ width: 20, height: 20 }} />
-        </TouchableOpacity>
-        <Text style={{ fontWeight: "bold", fontSize: 18 }}>Booking</Text>
-        <Text></Text>
+        {/* Booking content */}
+        <View style={styles.content}>
+          {loading ? (
+            <Text>Đang tải...</Text>
+          ) : bookings.length > 0 ? (
+            <FlatList
+              data={bookings}
+              renderItem={renderBookingItem}
+              keyExtractor={(item) => item.payID}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <Text style={styles.emptyText}>Chưa có đơn đặt chỗ nào</Text>
+          )}
+        </View>
       </View>
 
-      {/* Booking content */}
-      <View style={styles.content}>
-        {loading ? (
-          <Text>Đang tải...</Text>
-        ) : bookings.length > 0 ? (
-          <FlatList
-            data={bookings}
-            renderItem={renderBookingItem}
-            keyExtractor={(item) => item.payID}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <Text style={styles.emptyText}>Chưa có đơn đặt chỗ nào</Text>
-        )}
-      </View>
+      <MenuFooter navigation={navigation} />
     </SafeAreaView>
   );
 }
@@ -97,8 +101,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingLeft: 30,
-    paddingRight: 30,
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingLeft: 15,
+    paddingRight: 15,
   },
   title: {
     marginTop: 10,
