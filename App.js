@@ -20,6 +20,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import FavoriteScreen from "./screens/FavoriteScreen";
 import BookingScreen from "./screens/BookingScreen";
 import SigninScreen from "./screens/SigninScreen";
+import InboxScreen from "./screens/InboxScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -119,6 +120,11 @@ export default function App() {
         <Stack.Screen
           name="SigninScreen"
           component={SigninScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="InboxScreen"
+          component={InboxScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}
