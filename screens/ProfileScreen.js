@@ -8,15 +8,31 @@ import {
   ScrollView,
 } from 'react-native';
 import MenuFooter from "../components/MenuFooter";
+import { signOut } from "firebase/auth";
+import { auth } from '../firebaseConfig';
 
+export default function ProfileScreen({ navigation }) {
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      // Sign-out successful, navigate to home screen
+      navigation.navigate("Home"); // Make sure "Home" matches your route name for the home screen
+      console.log("Signed out successfully");
+    }).catch((error) => {
+      // Handle error
+      console.error("Error signing out: ", error);
+    });
+  };
 
-export default function ProfileScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.avatar}>
           {/* Placeholder for profile picture */}
+          <Image
+            source={{ uri: 'https://via.placeholder.com/70' }} // Placeholder image URL
+            style={styles.avatarImage}
+          />
         </View>
         <Text style={styles.email}>@gmail.com</Text>
       </View>
@@ -41,7 +57,7 @@ export default function ProfileScreen({ navigation, route }) {
           <Text style={styles.menuText}>Câu hỏi cho chỗ nghỉ</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.menuItem, styles.logout]}>
-          <Text style={[styles.menuText, styles.logoutText]}>Đăng xuất</Text>
+          <Text onPress={handleLogout} style={[styles.menuText, styles.logoutText]}>Đăng xuất</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -67,6 +83,13 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     backgroundColor: '#ccc',
     marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
   },
   email: {
     color: '#fff',
@@ -86,23 +109,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: 10,
-    borderTopWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#888',
-  },
-  activeFooter: {
-    color: '#003580',
-    fontWeight: 'bold',
-  },
   logout: {
     marginTop: 20,
     backgroundColor: '#ffe5e5',
@@ -112,4 +118,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

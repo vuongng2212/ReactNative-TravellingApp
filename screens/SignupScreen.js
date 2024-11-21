@@ -1,10 +1,25 @@
-
-import { Link } from '@react-navigation/native';
+import React, { useState } from 'react';
 import { Text, View, TextInput, Button, Image, StyleSheet, Linking } from 'react-native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
-export default function SignupScreen({navigation}) {
+export default function SignupScreen({ navigation }) {
   const handleLink = (url) => {
     Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+  };
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onSubmit = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user);
+      navigation.navigate('SigninScreen');
+    } catch (error) {
+      console.error(error.code, error.message);
+    }
   };
 
   return (
@@ -12,12 +27,22 @@ export default function SignupScreen({navigation}) {
       <Text style={styles.paragraph}>Sign up</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your mobile number"
-        keyboardType="phone-pad"
+        placeholder="Enter your mobile number/ email"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail} // Corrected handler for TextInput
+        required
       />
-      {/* Change HomeScreen to SearchScreen */}
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your password"
+        secureTextEntry={true} // Corrected usage
+        value={password}
+        onChangeText={setPassword} // Corrected handler for TextInput
+        required
+      />
       <View style={styles.buttonContainer}>
-        <Button title="Sign up" onPress={() => navigation.navigate('HomeScreen')} />
+        <Button title="Sign up" onPress={onSubmit} />
       </View>
       <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
@@ -49,9 +74,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'white',
     padding: 8,
-    backgroundColor: "white",
   },
   paragraph: {
     margin: 24,

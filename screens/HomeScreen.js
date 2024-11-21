@@ -20,6 +20,8 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import SearchIcon from "../assets/SearchIcon.png";
 import PropertyList from "../components/SearchResultsScreen-PropertyList";
 import MenuFooter from "../components/MenuFooter";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '../firebaseConfig';
 
 
 export default function HomeScreen({ navigation, route }) {
@@ -54,6 +56,21 @@ export default function HomeScreen({ navigation, route }) {
 
     fetchData();
   }, []);
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+
+          const uid = user.uid;
+          // ...
+          console.log("uid", uid)
+        } else {
+          // User is signed out
+          // ...
+          console.log("user is logged out")
+        }
+      });
+
+}, [])
 
   return (
     <SafeAreaView style={styles.container}>
