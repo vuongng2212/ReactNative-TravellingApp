@@ -98,10 +98,8 @@ const PropertyList = ({
   const renderItem = ({ item }) => {
     const firstImage =
       Array.isArray(item.Place.img) && item.Place.img.length > 0
-        ? `${item.Place.img[0]}.jpg`
-        : `${item.Place.img}.jpg`;
-
-    console.log(firstImage);
+        ? `${item.Place.img[0]}.png`
+        : `${item.Place.img}.png`;
 
     return (
       <View>

@@ -11,6 +11,8 @@ import {
   Linking,
   ActivityIndicator,
   Alert,
+  FlatList,
+  Dimensions,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { doc, getDoc } from "firebase/firestore";
@@ -27,10 +29,13 @@ import Pool from "../assets/Pool.png";
 import Outdoor from "../assets/Outdoor.png";
 import Clock from "../assets/Clock.png";
 
+const { width } = Dimensions.get("window");
+
 export default function PropertyDetailScreen({ route, navigation }) {
   const { placeId, startDay, endDay, guests, child } = route.params;
   const [placeData, setPlaceData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchPlaceData = async () => {
@@ -39,14 +44,18 @@ export default function PropertyDetailScreen({ route, navigation }) {
         const placeDoc = await getDoc(placeRef);
 
         if (placeDoc.exists()) {
-          setPlaceData(placeDoc.data());
+          const data = placeDoc.data();
+          setPlaceData({
+            id: placeDoc.id,
+            ...data,
+          });
         } else {
-          // Xử lý trường hợp không tìm thấy dữ liệu
           Alert.alert("Lỗi", "Không tìm thấy thông tin địa điểm");
           navigation.goBack();
         }
       } catch (error) {
         console.error("Error fetching place data:", error);
+        console.log("Error details:", error.message);
         Alert.alert("Lỗi", "Không thể tải thông tin địa điểm");
         navigation.goBack();
       } finally {
@@ -86,16 +95,45 @@ export default function PropertyDetailScreen({ route, navigation }) {
       longitude: longitude,
     });
   };
+
+  const renderImage = ({ item }) => (
+    <Image source={{ uri: `${item}.jpg` }} style={styles.img} />
+  );
+
+  const handleScroll = (event) => {
+    const slideSize = width;
+    const index = Math.floor(event.nativeEvent.contentOffset.x / slideSize);
+    setCurrentImageIndex(index);
+  };
+
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <ScrollView>
+        {/* Image Slider */}
         <View>
-          <Image
-            source={{ uri: `${placeData.Place.img}.jpg` }}
-            style={styles.img}
+          <FlatList
+            data={
+              Array.isArray(placeData.Place.img)
+                ? placeData.Place.img
+                : [placeData.Place.img]
+            }
+            renderItem={renderImage}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
           />
-
+          <View style={styles.imageCounter}>
+            <Text style={styles.imageCounterText}>
+              {currentImageIndex + 1}/
+              {Array.isArray(placeData.Place.img)
+                ? placeData.Place.img.length
+                : 1}
+            </Text>
+          </View>
           <TouchableOpacity
             style={styles.overlayIMG}
             onPress={() => navigation.goBack()}
@@ -103,9 +141,9 @@ export default function PropertyDetailScreen({ route, navigation }) {
             <Image source={backIcon} style={styles.icon} />
           </TouchableOpacity>
         </View>
+        {/* Name and Address */}
         <View style={styles.container}>
-          {/* Name and Address */}
-          <Text style={styles.txtName}>{placeData.Place.txtName}</Text>
+          <Text style={styles.txtName}>{placeData.Place.name}</Text>
           <View
             style={{
               flexDirection: "row",
@@ -334,7 +372,13 @@ export default function PropertyDetailScreen({ route, navigation }) {
           </View>
           <View>
             <Image
-              source={{ uri: `${placeData.Place.img}.jpg` }}
+              source={{
+                uri: `${
+                  Array.isArray(placeData.Place.img)
+                    ? placeData.Place.img[0]
+                    : placeData.Place.img
+                }.jpg`,
+              }}
               style={styles.DescriptionImg}
             />
             <Text style={styles.DescriptionTxt}>
@@ -389,7 +433,7 @@ export default function PropertyDetailScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   img: {
-    width: "100%",
+    width: width,
     height: 250,
     resizeMode: "cover",
   },
@@ -410,6 +454,7 @@ const styles = StyleSheet.create({
   txtName: {
     fontSize: 19,
     fontWeight: "bold",
+    marginBottom: 10,
   },
   rating: {
     flexDirection: "row",
@@ -484,5 +529,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  imageCounter: {
+    position: "absolute",
+    right: 15,
+    bottom: 15,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    padding: 8,
+    borderRadius: 15,
+    minWidth: 50,
+    alignItems: "center",
+  },
+  imageCounterText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

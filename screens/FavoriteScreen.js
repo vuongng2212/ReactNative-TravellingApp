@@ -17,7 +17,7 @@ const FavoriteScreen = ({ navigation, route }) => {
         const userDoc = await getDoc(userRef);
         const userFavorites = userDoc.data()?.Favourite || [];
 
-        console.log("Loaded favorites:", userFavorites);
+        // console.log("Loaded favorites:", userFavorites);
         setFavorites(userFavorites);
         setLoading(false);
       } catch (error) {

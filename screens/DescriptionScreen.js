@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Back from "../assets/left-arrow.png";
 import locationIcon from "../assets/location.png";
+import firebase from "firebase/compat/app";
 
 export default function DescriptionScreen({ route, navigation }) {
   const { item } = route.params;
@@ -17,12 +18,16 @@ export default function DescriptionScreen({ route, navigation }) {
   const openMap = (item) => {
     const latitude = parseFloat(item.Cord.latitude);
     const longitude = parseFloat(item.Cord.longitude);
-    navigation.navigate('MapScreen', {
+    navigation.navigate("MapScreen", {
       item: item,
       latitude: latitude,
       longitude: longitude,
     });
   };
+  const firstImage =
+    Array.isArray(item.Place.img) && item.Place.img.length > 0
+      ? `${item.Place.img[0]}.jpg`
+      : `${item.Place.img}.jpg`;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,7 +43,7 @@ export default function DescriptionScreen({ route, navigation }) {
       </View>
 
       {/* Image */}
-      <Image source={{ uri: `${item.Place.img}.png` }} style={styles.img} />
+      <Image source={{ uri: firstImage }} style={styles.img} />
       <Text style={styles.DescriptionTxt}>{item.Place.description}</Text>
       <View
         style={{
@@ -80,8 +85,10 @@ export default function DescriptionScreen({ route, navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingLeft: 15,
     paddingRight: 15,
+    backgroundColor: "white",
   },
   title: {
     marginTop: 10,
@@ -93,6 +100,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     width: "100%",
     height: 250,
+    borderRadius: 10,
   },
   DescriptionTxt: {
     marginTop: 10,
