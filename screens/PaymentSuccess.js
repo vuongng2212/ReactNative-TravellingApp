@@ -181,7 +181,7 @@ export default function PaymentSuccess({ route, navigation }) {
       </View>
       <TouchableOpacity
         style={styles.bookBtn}
-        onPress={() => navigation.navigate("SearchResultsScreen")}
+        onPress={() => navigation.navigate("BookingScreen")}
       >
         <Text style={styles.bookTxt}>View booking</Text>
       </TouchableOpacity>

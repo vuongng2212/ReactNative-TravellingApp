@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import HeartIcon from "../assets/heart.png";
 import HeartIconFilled from "../assets/red-heart.png";
+import StarIcon from "../assets/star.png";
 import {
   doc,
   updateDoc,
@@ -95,6 +96,13 @@ const PropertyList = ({
   };
 
   const renderItem = ({ item }) => {
+    const firstImage =
+      Array.isArray(item.Place.img) && item.Place.img.length > 0
+        ? `${item.Place.img[0]}.jpg`
+        : `${item.Place.img}.jpg`;
+
+    console.log(firstImage);
+
     return (
       <View>
         <TouchableOpacity
@@ -109,10 +117,7 @@ const PropertyList = ({
           }}
         >
           <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: `${item.Place.img}.jpg` }}
-              style={styles.img}
-            />
+            <Image source={{ uri: firstImage }} style={styles.img} />
             <TouchableOpacity
               style={styles.heartButton}
               onPress={() => toggleFavorite(item)}
@@ -130,7 +135,16 @@ const PropertyList = ({
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text style={styles.txtRoom}>{item.Place.name}</Text>
-            <Text style={{ marginTop: 10 }}>{item.Place.rate}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
+              <Text>{item.Place.rate}</Text>
+              <Image source={StarIcon} style={styles.starIcon} />
+            </View>
           </View>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -189,6 +203,11 @@ const styles = StyleSheet.create({
   },
   heartIconFilled: {
     tintColor: "red",
+  },
+  starIcon: {
+    marginLeft: 5,
+    width: 15,
+    height: 15,
   },
 });
 
