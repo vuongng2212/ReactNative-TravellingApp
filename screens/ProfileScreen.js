@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,15 +12,27 @@ import { signOut } from "firebase/auth";
 import { auth } from '../firebaseConfig';
 
 export default function ProfileScreen({ navigation }) {
+  const [userEmail, setUserEmail] = useState('');
+
+  // Fetch user email on component mount
+  useEffect(() => {
+    const user = auth.currentUser; // Get the currently logged-in user
+    if (user) {
+      setUserEmail(user.email); // Set the email in state
+    }
+  }, []);
+
   const handleLogout = () => {
-    signOut(auth).then(() => {
-      // Sign-out successful, navigate to home screen
-      navigation.navigate("SigninScreen"); // Make sure "Home" matches your route name for the home screen
-      console.log("Signed out successfully");
-    }).catch((error) => {
-      // Handle error
-      console.error("Error signing out: ", error);
-    });
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful, navigate to the sign-in screen
+        navigation.navigate("SigninScreen");
+        console.log("Signed out successfully");
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error signing out: ", error);
+      });
   };
 
   return (
@@ -34,7 +46,8 @@ export default function ProfileScreen({ navigation }) {
             style={styles.avatarImage}
           />
         </View>
-        <Text style={styles.email}>ntn@gmail.com</Text>
+        {/* Email */}
+        <Text style={styles.email}>{userEmail || 'Loading...'}</Text>
       </View>
 
       {/* Menu Options */}
@@ -45,14 +58,14 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity style={styles.menuItem}>
           <Text style={styles.menuText}>Gift & Wallet</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText} onPress={() => navigation.navigate('FavoriteScreen')}>Favorite</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('FavoriteScreen')}>
+          <Text style={styles.menuText}>Favorite</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <Text style={styles.menuText}>Review</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Question ?</Text>
+          <Text style={styles.menuText}>Question?</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.menuItem, styles.logout]}>
           <Text onPress={handleLogout} style={[styles.menuText, styles.logoutText]}>Sign Out</Text>
