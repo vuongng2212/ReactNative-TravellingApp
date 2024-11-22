@@ -15,7 +15,7 @@ export default function ProfileScreen({ navigation }) {
   const handleLogout = () => {
     signOut(auth).then(() => {
       // Sign-out successful, navigate to home screen
-      navigation.navigate("Home"); // Make sure "Home" matches your route name for the home screen
+      navigation.navigate("SigninScreen"); // Make sure "Home" matches your route name for the home screen
       console.log("Signed out successfully");
     }).catch((error) => {
       // Handle error
@@ -34,30 +34,28 @@ export default function ProfileScreen({ navigation }) {
             style={styles.avatarImage}
           />
         </View>
-        <Text style={styles.email}>@gmail.com</Text>
+        <Text style={styles.email}>ntn@gmail.com</Text>
       </View>
 
       {/* Menu Options */}
       <ScrollView>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Quản lý tài khoản</Text>
+          <Text style={styles.menuText}>Manage account</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Tặng thưởng & Ví</Text>
+          <Text style={styles.menuText}>Gift & Wallet</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>
-            Chương trình khách hàng thân thiết Genius
-          </Text>
+          <Text style={styles.menuText} onPress={() => navigation.navigate('FavoriteScreen')}>Favorite</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Đánh giá</Text>
+          <Text style={styles.menuText}>Review</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Câu hỏi cho chỗ nghỉ</Text>
+          <Text style={styles.menuText}>Question ?</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.menuItem, styles.logout]}>
-          <Text onPress={handleLogout} style={[styles.menuText, styles.logoutText]}>Đăng xuất</Text>
+          <Text onPress={handleLogout} style={[styles.menuText, styles.logoutText]}>Sign Out</Text>
         </TouchableOpacity>
       </ScrollView>
 

@@ -16,13 +16,13 @@ export default function MenuFooter({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.footerNavItem}
-        onPress={() => navigation.navigate("FavoriteScreen")}
+        onPress={() => navigation.navigate("HomeScreen")}
       >
         <Image
           style={styles.menuImg2}
-          source={require("../assets/heart.png")}
+          source={require("../assets/home.png")}
         />
-        <Text style={styles.footerText}>Favorite</Text>
+        <Text style={styles.footerText}>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.footerNavItem}
