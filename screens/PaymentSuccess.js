@@ -14,7 +14,7 @@ import {
 import SuccessIcon from "../assets/PaymentSuccess.png";
 import DownloadPDF from "../assets/DownloadPDF.png";
 import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 
 export default function PaymentSuccess({ route, navigation }) {
   const { item, total, paymentMethod } = route.params;
@@ -25,19 +25,29 @@ export default function PaymentSuccess({ route, navigation }) {
 
   const saveBooking = async () => {
     try {
-      const testUserID = "3hzoxYV7m5nlV6e4vEKH";
-      const userRef = doc(db, "users", testUserID);
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.log("No user logged in");
+        navigation.navigate("SigninScreen");
+        return;
+      }
+
+      const firstImage = Array.isArray(item?.Place?.img)
+        ? item.Place.img[0] // Nếu là mảng, lấy phần tử đầu tiên
+        : item?.Place?.img || ""; // Nếu không phải mảng, giữ nguyên hoặc dùng chuỗi rỗng
+
+      const userRef = doc(db, "users", currentUser.uid);
       const bookingData = {
         payID: refNumber || "",
         placeName: item?.Place?.name || "",
-        placeImg: item?.Place?.img || "",
+        placeImg: firstImage,
         placeRate: item?.Place?.rate || 0,
         totalPrice: total || 0,
-
         paymentMethod: paymentMethod || "",
+        bookingDate: formattedDate,
+        bookingTime: formattedTime,
       };
 
-      // Kiểm tra object đã tạo
       console.log("BookingData:", bookingData);
 
       const userDoc = await getDoc(userRef);

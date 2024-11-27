@@ -1,15 +1,28 @@
-import { useState } from 'react';
-import { Text, View, TextInput, Button, Image, StyleSheet, Linking } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { useState } from "react";
+import {
+  Text,
+  View,
+  TextInput,
+  Button,
+  Image,
+  StyleSheet,
+  Linking,
+  Alert,
+} from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 export default function SigninScreen({ navigation }) {
   const handleLink = (url) => {
-    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err)
+    );
   };
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Simple email validation
   const isValidEmail = (email) => {
@@ -19,32 +32,50 @@ export default function SigninScreen({ navigation }) {
 
   const onLogin = async () => {
     if (!email || !password) {
-      console.error('Email and Password cannot be empty');
+      Alert.alert("Lỗi", "Email và mật khẩu không được để trống");
       return;
     }
 
     if (!isValidEmail(email)) {
-      console.error('Invalid email format');
+      console.error("Invalid email format");
       return;
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
-      console.log('Signed in as:', user.email);
-      navigation.navigate('HomeScreen'); // Corrected navigation
+
+      // Kiểm tra user trong Firestore
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+
+      // Nếu user chưa tồn tại trong Firestore, tạo mới
+      if (!userDoc.exists()) {
+        await setDoc(userRef, {
+          email: user.email,
+          created_at: new Date().toISOString(),
+        });
+      }
+
+      navigation.navigate("HomeScreen");
     } catch (error) {
       // Handling specific errors
-      if (error.code === 'auth/invalid-email') {
-        console.error('Invalid email format');
-      } else if (error.code === 'auth/user-not-found') {
-        console.error('No user found with this email');
-      } else if (error.code === 'auth/wrong-password') {
-        console.error('Incorrect password');
-      } else if (error.code === 'auth/invalid-credential') {
-        console.error('Invalid credentials. Please check your email or password');
+      if (error.code === "auth/invalid-email") {
+        console.error("Invalid email format");
+      } else if (error.code === "auth/user-not-found") {
+        console.error("No user found with this email");
+      } else if (error.code === "auth/wrong-password") {
+        console.error("Incorrect password");
+      } else if (error.code === "auth/invalid-credential") {
+        console.error(
+          "Invalid credentials. Please check your email or password"
+        );
       } else {
-        console.error('Error during login:', error.message);
+        console.error("Error during login:", error.message);
       }
     }
   };
@@ -72,21 +103,42 @@ export default function SigninScreen({ navigation }) {
       <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
         <View style={styles.buttonContainer}>
-          <Image style={styles.logo} source={require("../assets/Facebook_Logo.png")} />
-          <Button title="Continue with Facebook" onPress={() => handleLink('https://www.facebook.com/')} />
+          <Image
+            style={styles.logo}
+            source={require("../assets/Facebook_Logo.png")}
+          />
+          <Button
+            title="Continue with Facebook"
+            onPress={() => handleLink("https://www.facebook.com/")}
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <Image style={styles.logo} source={require("../assets/Apple_logo.png")} />
-          <Button title="Continue with Apple" onPress={() => handleLink('https://www.apple.com/')} />
+          <Image
+            style={styles.logo}
+            source={require("../assets/Apple_logo.png")}
+          />
+          <Button
+            title="Continue with Apple"
+            onPress={() => handleLink("https://www.apple.com/")}
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <Image style={styles.logo} source={require("../assets/Google__G__logo.png")} />
-          <Button title="Continue with Google" onPress={() => handleLink('https://accounts.google.com/')} />
+          <Image
+            style={styles.logo}
+            source={require("../assets/Google__G__logo.png")}
+          />
+          <Button
+            title="Continue with Google"
+            onPress={() => handleLink("https://accounts.google.com/")}
+          />
         </View>
       </View>
       <Text style={styles.paragraph}>
-        Don't have an account?{' '}
-        <Text style={styles.linkText} onPress={() => navigation.navigate('SignupScreen')}>
+        Don't have an account?{" "}
+        <Text
+          style={styles.linkText}
+          onPress={() => navigation.navigate("SignupScreen")}
+        >
           Sign up
         </Text>
       </Text>
@@ -97,33 +149,33 @@ export default function SigninScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
     padding: 8,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
-    width: '80%',
-    fontWeight: '300',
+    width: "80%",
+    fontWeight: "300",
   },
   authOptions: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 10,
   },
   logo: {
@@ -132,7 +184,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   linkText: {
-    color: 'blue',
-    textDecorationLine: 'underline',
+    color: "blue",
+    textDecorationLine: "underline",
   },
 });

@@ -32,10 +32,14 @@ const PropertyList = ({
   useEffect(() => {
     const loadFavorites = async () => {
       try {
-        const userId = "3hzoxYV7m5nlV6e4vEKH";
-        if (!userId) return;
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          console.log("No user logged in");
+          navigation.navigate("SigninScreen");
+          return;
+        }
 
-        const userRef = doc(db, "users", userId);
+        const userRef = doc(db, "users", currentUser.uid);
         const userDoc = await getDoc(userRef);
         const userFavorites = userDoc.data()?.Favourite || [];
 
@@ -55,19 +59,24 @@ const PropertyList = ({
 
   const toggleFavorite = async (item) => {
     try {
-      const userId = "3hzoxYV7m5nlV6e4vEKH";
-      if (!userId) {
-        console.log("User not logged in");
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.log("No user logged in");
+        navigation.navigate("SigninScreen");
         return;
       }
 
-      const userRef = doc(db, "users", userId);
+      const userRef = doc(db, "users", currentUser.uid);
       const userDoc = await getDoc(userRef);
+
+      const firstImage = Array.isArray(item.Place?.img)
+        ? item.Place.img[0]
+        : item.Place?.img || "";
 
       const favoritePlace = {
         placeId: item.id || "",
         placeName: item.Place?.name || "",
-        placeImg: item.Place?.img || "",
+        placeImg: firstImage,
         placeRate: item.Place?.rate || 0,
         placePrice: item.Place?.price || 0,
         guests: item.Place?.guest || 1,
@@ -78,10 +87,12 @@ const PropertyList = ({
         await updateDoc(userRef, {
           Favourite: arrayUnion(favoritePlace),
         });
+        console.log("Added to favorites");
       } else {
         await updateDoc(userRef, {
           Favourite: arrayRemove(favoritePlace),
         });
+        console.log("Removed from favorites");
       }
 
       setFavorites((prev) => ({

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import PropertyList from "../components/SearchResultsScreen-PropertyList";
 import MenuFooter from "../components/MenuFooter";
 
@@ -12,12 +12,17 @@ const FavoriteScreen = ({ navigation, route }) => {
   useEffect(() => {
     const loadFavorites = async () => {
       try {
-        const userId = "3hzoxYV7m5nlV6e4vEKH";
-        const userRef = doc(db, "users", userId);
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          console.log("No user logged in");
+          navigation.navigate("SigninScreen");
+          return;
+        }
+
+        const userRef = doc(db, "users", currentUser.uid);
         const userDoc = await getDoc(userRef);
         const userFavorites = userDoc.data()?.Favourite || [];
 
-        // console.log("Loaded favorites:", userFavorites);
         setFavorites(userFavorites);
         setLoading(false);
       } catch (error) {
@@ -27,7 +32,7 @@ const FavoriteScreen = ({ navigation, route }) => {
     };
 
     loadFavorites();
-  }, []);
+  }, [navigation]);
 
   const renderContent = () => {
     if (loading) {

@@ -10,7 +10,7 @@ import {
   FlatList,
 } from "react-native";
 import Back from "../assets/left-arrow.png";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import star from "../assets/star.png";
 import MenuFooter from "../components/MenuFooter";
@@ -25,19 +25,39 @@ export default function BookingScreen({ navigation }) {
 
   const getBookings = async () => {
     try {
-      const userRef = doc(db, "users", "3hzoxYV7m5nlV6e4vEKH");
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.log("No user logged in");
+        navigation.navigate("SigninScreen");
+        return;
+      }
+
+      const userRef = doc(db, "users", currentUser.uid);
       const userDoc = await getDoc(userRef);
       const userData = userDoc.data();
 
       if (userData?.Booking) {
         setBookings(userData.Booking);
+      } else {
+        setBookings([]);
       }
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
+      Alert.alert("Lỗi", "Không thể tải dữ liệu đặt phòng");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigation.navigate("SigninScreen");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigation]);
 
   const renderBookingItem = ({ item }) => {
     return (
