@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button, Image, StyleSheet, Linking } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { Text, View, TextInput, Button, Alert, StyleSheet, Linking } from 'react-native';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
 export default function SignupScreen({ navigation }) {
-  const handleLink = (url) => {
-    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
-  };
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const onSubmit = async () => {
     try {
+      // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log(user);
-      navigation.navigate('SigninScreen');
+
+      // Send email verification
+      await sendEmailVerification(user);
+      Alert.alert(
+        'Verification Email Sent',
+        'A verification email has been sent to your email address. Please verify your email before signing in.',
+        [{ text: 'OK', onPress: () => navigation.navigate('SigninScreen') }]
+      );
+
+      console.log('User created:', user.email);
     } catch (error) {
-      console.error(error.code, error.message);
+      console.error('Signup Error:', error.code, error.message);
+      Alert.alert('Sign up failed', error.message);
     }
   };
 
@@ -27,18 +33,18 @@ export default function SignupScreen({ navigation }) {
       <Text style={styles.paragraph}>Sign up</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your mobile number/ email"
+        placeholder="Enter your email"
         keyboardType="email-address"
         value={email}
-        onChangeText={setEmail} // Corrected handler for TextInput
+        onChangeText={setEmail}
         required
       />
       <TextInput
         style={styles.input}
         placeholder="Enter your password"
-        secureTextEntry={true} // Corrected usage
+        secureTextEntry={true}
         value={password}
-        onChangeText={setPassword} // Corrected handler for TextInput
+        onChangeText={setPassword}
         required
       />
       <View style={styles.buttonContainer}>
@@ -47,21 +53,30 @@ export default function SignupScreen({ navigation }) {
       <Text style={styles.paragraph}> OR </Text>
       <View style={styles.authOptions}>
         <View style={styles.buttonContainer}>
-          <Image style={styles.logo} source={require("../assets/Facebook_Logo.png")} />
-          <Button title="Continue with Facebook" onPress={() => handleLink('https://www.facebook.com/')} />
+          <Button
+            title="Continue with Facebook"
+            onPress={() => Linking.openURL('https://www.facebook.com/')}
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <Image style={styles.logo} source={require("../assets/Apple_logo.png")} />
-          <Button title="Continue with Apple" onPress={() => handleLink('https://www.apple.com/')} />
+          <Button
+            title="Continue with Apple"
+            onPress={() => Linking.openURL('https://www.apple.com/')}
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <Image style={styles.logo} source={require("../assets/Google__G__logo.png")} />
-          <Button title="Continue with Google" onPress={() => handleLink('https://accounts.google.com/')} />
+          <Button
+            title="Continue with Google"
+            onPress={() => Linking.openURL('https://accounts.google.com/')}
+          />
         </View>
       </View>
       <Text style={styles.paragraph}>
         Already have an account?{' '}
-        <Text style={styles.linkText} onPress={() => navigation.navigate('SigninScreen')}>
+        <Text
+          style={styles.linkText}
+          onPress={() => navigation.navigate('SigninScreen')}
+        >
           Sign in
         </Text>
       </Text>
@@ -100,11 +115,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
-  },
-  logo: {
-    width: 24,
-    height: 24,
-    marginRight: 10,
   },
   linkText: {
     color: 'blue',
