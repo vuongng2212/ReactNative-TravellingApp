@@ -65,6 +65,9 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.menuText}>Review</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
+          <Text style={styles.menuText} onPress={() => navigation.navigate('ResetpasswordScreen')}>Change password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
           <Text style={styles.menuText}>Question?</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.menuItem, styles.logout]}>

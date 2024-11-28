@@ -21,6 +21,7 @@ import FavoriteScreen from "./screens/FavoriteScreen";
 import BookingScreen from "./screens/BookingScreen";
 import SigninScreen from "./screens/SigninScreen";
 import InboxScreen from "./screens/InboxScreen";
+import ResetpasswordScreen from "./screens/ResetpasswordScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -125,6 +126,11 @@ export default function App() {
         <Stack.Screen
           name="InboxScreen"
           component={InboxScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ResetpasswordScreen"
+          component={ResetpasswordScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen name="add" component={add} /> */}
