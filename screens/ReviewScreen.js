@@ -11,12 +11,12 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db, auth } from "../firebaseConfig";
 import Svg, { Rect } from "react-native-svg";
 import Back from "../assets/left-arrow.png";
 import StarIcon from "../assets/star.png";
-import ReviewModal from '../components/Review-Modal';
+import ReviewModal from "../components/Review-Modal";
 
 export default function ReviewScreen({ navigation, route }) {
   const [placeData, setPlaceData] = useState(null);
@@ -24,7 +24,7 @@ export default function ReviewScreen({ navigation, route }) {
   const [averageRating, setAverageRating] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [newRating, setNewRating] = useState(5);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchPlaceData = async () => {
@@ -104,15 +104,44 @@ export default function ReviewScreen({ navigation, route }) {
     );
   };
 
-  const handleSubmitReview = () => {
-    setModalVisible(false);
-    setComment('');
-    setNewRating(5);
+  const handleSubmitReview = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Vui lòng đăng nhập để đánh giá");
+        return;
+      }
+
+      const newReview = {
+        content: comment,
+        createAte: new Date().toISOString(),
+        id: `review${reviews.length + 1}`,
+        rating: newRating,
+        userAvatar: user.photoURL || "https://imgur.com/VHbmmpv",
+        userName: user.email || "Anonymous",
+      };
+
+      const placeRef = doc(db, "Place", route.params.id);
+      await updateDoc(placeRef, {
+        Reviews: arrayUnion(newReview),
+      });
+
+      // Cập nhật state local
+      setReviews([...reviews, newReview]);
+
+      // Reset form
+      setModalVisible(false);
+      setComment("");
+      setNewRating(5);
+    } catch (error) {
+      console.error("Error adding review:", error);
+      alert("Có lỗi xảy ra khi thêm đánh giá");
+    }
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
-    setComment('');
+    setComment("");
     setNewRating(5);
   };
 
@@ -194,7 +223,7 @@ export default function ReviewScreen({ navigation, route }) {
         style={styles.addReviewButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+        <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
           Add Review
         </Text>
       </TouchableOpacity>
@@ -300,14 +329,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   addReviewButton: {
-    backgroundColor: '#58b5b9',
+    backgroundColor: "#58b5b9",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 10,
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
-    right: 0
-  }
+    right: 0,
+  },
 });
